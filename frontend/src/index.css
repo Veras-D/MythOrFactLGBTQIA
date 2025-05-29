@@ -102,6 +102,37 @@
   );
 }
 
+.rainbow-border {
+  border: 3px solid transparent;
+  border-radius: 10px;
+  background-image:
+    linear-gradient(white, white),
+    linear-gradient(135deg,
+      #e40303 0%,
+      #ff8c00 16.66%,
+      #ffed00 33.33%,
+      #008018 50%,
+      #0066ff 66.66%,
+      #8b00ff 83.33%,
+      #e40303 100%
+    );
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+.rainbow-text {
+  font-size: 3rem;
+  font-weight: bold;
+  background: linear-gradient(90deg,
+    #e40303, #ff8c00, #ffed00, #008018, #0066ff, #8b00ff, #e40303);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  /* Para Firefox */
+  background-clip: text;
+  color: transparent;
+}
+
 /* Soft, light glassmorphism effects */
 .glass {
   background: rgba(255, 255, 255, 0.85);

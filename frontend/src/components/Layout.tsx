@@ -27,7 +27,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
               {/* Logo */}
               <div className="flex items-center">
                 <h1 className="text-xl sm:text-2xl font-bold text-rainbow">
-                  LGBTMythOrFact
+                  Myth Or Fact LGBTQIA+
                 </h1>
               </div>
 
@@ -76,7 +76,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
                 ) : (
                   <Button
                     onClick={() => setShowAuthForm(true)}
-                    className="pride-gradient text-white font-semibold btn-hover"
+                    className="rainbow-border text-gray-700 font-semibold btn-hover"
                   >
                     <User className="w-4 h-4 mr-2" />
                     Sign In
