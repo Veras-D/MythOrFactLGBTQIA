@@ -89,16 +89,15 @@
   }
 }
 
-/* LGBT+ Pride Colors - Used sparingly as accents */
 .pride-gradient {
   background: linear-gradient(135deg,
-    #e40303 0%,   /* Red */
-    #ff8c00 16.66%, /* Orange */
-    #ffed00 33.33%, /* Yellow */
-    #008018 50%,    /* Green */
-    #0066ff 66.66%, /* Blue */
-    #8b00ff 83.33%, /* Purple */
-    #e40303 100%    /* Red again */
+    #e40303 0%,
+    #ff8c00 16.66%,
+    #ffed00 33.33%,
+    #008018 50%,
+    #0066ff 66.66%,
+    #8b00ff 83.33%,
+    #e40303 100%
   );
 }
 
@@ -128,12 +127,10 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 
-  /* Para Firefox */
   background-clip: text;
   color: transparent;
 }
 
-/* Soft, light glassmorphism effects */
 .glass {
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
@@ -148,7 +145,6 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
-/* Dark glass card for better contrast */
 .glass-card-dark {
   background: rgba(30, 30, 30, 0.95);
   backdrop-filter: blur(20px);
@@ -156,7 +152,6 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-/* Light, soft animated background */
 .light-bg {
   background: linear-gradient(-45deg,
     #f8f9ff, #fff8f8, #f8fff8, #fff8ff

@@ -27,3 +27,16 @@ Thumbs.db
 *.bak
 *.old
 *.orig
+/backend/.mvn/wrapper/maven-wrapper.jar
+/backend/!**/src/main/**/target/
+/backend/!**/src/test/**/target/
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+/backend/build/
+/backend/!**/src/main/**/build/
+/backend/!**/src/test/**/build/
