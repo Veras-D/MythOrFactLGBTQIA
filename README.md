@@ -1,4 +1,19 @@
+<div align="center">
+    <img src="./Frontend/public/favicon.svg" height="80px"></img>
+</div>
+
 # LGBTMythOrFact 🏳️‍🌈
+
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+[![Java](https://img.shields.io/badge/Java-17+-ED8B00?logo=oracle&logoColor=white)](https://www.oracle.com/java/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-6DB33F?logo=spring&logoColor=white)](https://spring.io/projects/spring-boot)
+[![React](https://img.shields.io/badge/React-18+-20232A?logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![MySQL](https://img.shields.io/badge/MySQL-005C84?logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+
+---
 
 An interactive full-stack quiz game designed to educate and challenge players' knowledge about LGBTQ+ topics. Test your understanding, learn new facts, and compete with others on the leaderboard!
 
@@ -215,3 +230,12 @@ This game was created to promote LGBTQ+ education and awareness through interact
 
 The project combines a robust Spring Boot backend with a modern React frontend to deliver a seamless, educational gaming experience that helps build understanding and acceptance of LGBTQ+ communities.
 
+## ☕ Support
+
+[![Ko-Fi](https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/verivi)
+
+---
+
+<div align="center">
+  <p>© 2025 VERAS. All rights reserved.</p>
+</div>
