@@ -3,12 +3,12 @@ package com.veras.mythOrFactLGBT.service;
 import com.veras.mythOrFactLGBT.model.User;
 import com.veras.mythOrFactLGBT.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder; // Will be added later
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.veras.mythOrFactLGBT.dto.UserResponse; // Added
-import java.util.List; // Added
-import java.util.stream.Collectors; // Added
+import com.veras.mythOrFactLGBT.dto.UserResponse;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 import java.util.Optional;
@@ -17,7 +17,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder; // Autowire once SecurityConfig is set up
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(readOnly = true) // Good practice for read-only operations
+    @Transactional(readOnly = true)
     public List<UserResponse> getGlobalLeaderboard() {
         List<User> topUsers = userRepository.findTop10ByOrderByHighestScoreDesc();
         return topUsers.stream()

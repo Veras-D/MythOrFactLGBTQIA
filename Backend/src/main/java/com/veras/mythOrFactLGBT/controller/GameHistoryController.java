@@ -4,20 +4,19 @@ import com.veras.mythOrFactLGBT.model.GameHistory;
 import com.veras.mythOrFactLGBT.model.User;
 import com.veras.mythOrFactLGBT.service.GameHistoryService;
 import com.veras.mythOrFactLGBT.service.UserService;
-import com.veras.mythOrFactLGBT.dto.GameHistoryResponseDto; // New import
-import io.swagger.v3.oas.annotations.media.ArraySchema; // Added/Ensure
-import io.swagger.v3.oas.annotations.media.Content; // Added/Ensure
-import io.swagger.v3.oas.annotations.media.Schema; // Added/Ensure
-import io.swagger.v3.oas.annotations.responses.ApiResponse; // Added/Ensure
-import io.swagger.v3.oas.annotations.Operation; // Added/Ensure
-import io.swagger.v3.oas.annotations.tags.Tag; // Added/Ensure
+import com.veras.mythOrFactLGBT.dto.GameHistoryResponseDto;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-// import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.Map;
@@ -38,7 +37,6 @@ public class GameHistoryController {
 
     @PostMapping
     @Operation(summary = "Record a new game session for the authenticated user")
-    // Ensure existing @ApiResponses are appropriate or add new ones if this response changes
     public ResponseEntity<?> recordGameHistory(@AuthenticationPrincipal UserDetails userDetails,
                                                  @RequestBody Map<String, Integer> payload) {
         if (userDetails == null) {
@@ -53,7 +51,6 @@ public class GameHistoryController {
             .orElseThrow(() -> new RuntimeException("User not found: " + userDetails.getUsername()));
 
         GameHistory gameRecord = gameHistoryService.recordGame(user, score);
-        // Return the DTO version:
         return ResponseEntity.status(HttpStatus.CREATED).body(GameHistoryResponseDto.fromGameHistory(gameRecord));
     }
 
@@ -68,7 +65,7 @@ public class GameHistoryController {
         }
         User user = userService.findByUsername(userDetails.getUsername())
             .orElseThrow(() -> new RuntimeException("User not found: " + userDetails.getUsername()));
-        List<GameHistoryResponseDto> history = gameHistoryService.getGameHistoryForUser(user); // Already returns DTO list
+        List<GameHistoryResponseDto> history = gameHistoryService.getGameHistoryForUser(user);
         return ResponseEntity.ok(history);
     }
 

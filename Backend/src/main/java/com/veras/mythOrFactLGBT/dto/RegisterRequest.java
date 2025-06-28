@@ -22,7 +22,7 @@ public class RegisterRequest {
     private String email;
 
     @NotBlank
-    @Size(min = 6, max = 255) // Max 255 to align with User.password length
+    @Size(min = 6, max = 255)
     @Schema(description = "Password for the new user", example = "password123", requiredMode = Schema.RequiredMode.REQUIRED)
     private String password;
 }

@@ -4,11 +4,11 @@ import com.veras.mythOrFactLGBT.model.GameHistory;
 import com.veras.mythOrFactLGBT.model.User;
 import com.veras.mythOrFactLGBT.repository.GameHistoryRepository;
 import com.veras.mythOrFactLGBT.repository.UserRepository;
-import com.veras.mythOrFactLGBT.dto.GameHistoryResponseDto; // New import
+import com.veras.mythOrFactLGBT.dto.GameHistoryResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.stream.Collectors; // New import
+import java.util.stream.Collectors;
 
 
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
 public class GameHistoryServiceImpl implements GameHistoryService {
 
     private final GameHistoryRepository gameHistoryRepository;
-    private final UserRepository userRepository; // To update highest_score
+    private final UserRepository userRepository;
 
     @Autowired
     public GameHistoryServiceImpl(GameHistoryRepository gameHistoryRepository, UserRepository userRepository) {
@@ -31,12 +31,10 @@ public class GameHistoryServiceImpl implements GameHistoryService {
         GameHistory gameHistory = new GameHistory();
         gameHistory.setUser(user);
         gameHistory.setScore(score);
-        // playedAt is set by database default
 
-        // Update user's highest score if this game's score is higher
         if (score > user.getHighestScore()) {
             user.setHighestScore(score);
-            userRepository.save(user); // Save the updated user
+            userRepository.save(user);
         }
         return gameHistoryRepository.save(gameHistory);
     }
@@ -53,9 +51,6 @@ public class GameHistoryServiceImpl implements GameHistoryService {
     @Override
     @Transactional(readOnly = true)
     public List<GameHistoryResponseDto> getLeaderboardByScoreForUser(Long userId) {
-        // Ensure user exists, or handle appropriately (e.g., throw exception or return empty list)
-        // userService.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        // This check is good, but often done in controller or if service is public facing.
         
 
         List<GameHistory> histories = gameHistoryRepository.findByUserIdOrderByScoreDesc(userId);

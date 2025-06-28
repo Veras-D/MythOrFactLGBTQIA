@@ -18,7 +18,7 @@ public class GameHistoryResponseDto {
     private Long id;
 
     @Schema(description = "Identifier of the user who played the game")
-    private Long userId; // Keep user_id for reference
+    private Long userId;
 
     @Schema(description = "Username of the user who played the game", example = "testuser")
     private String username;
@@ -29,14 +29,13 @@ public class GameHistoryResponseDto {
     @Schema(description = "Timestamp when the game was played")
     private Timestamp playedAt;
 
-    // Static factory method to map from GameHistory entity
     public static GameHistoryResponseDto fromGameHistory(GameHistory gameHistory) {
         if (gameHistory == null) {
             return null;
         }
         return new GameHistoryResponseDto(
             gameHistory.getId(),
-            gameHistory.getUser().getId(), // Get user ID from the associated User entity
+            gameHistory.getUser().getId(),
             gameHistory.getUser().getUsername(),
             gameHistory.getScore(),
             gameHistory.getPlayedAt()

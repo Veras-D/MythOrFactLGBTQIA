@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList; // For authorities if not using roles directly
+import java.util.ArrayList;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -23,7 +23,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
 
-        // Using Spring Security's User.builder for UserDetails implementation
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())

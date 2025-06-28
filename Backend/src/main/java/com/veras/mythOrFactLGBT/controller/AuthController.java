@@ -4,7 +4,7 @@ import com.veras.mythOrFactLGBT.dto.AuthResponse;
 import com.veras.mythOrFactLGBT.dto.LoginRequest;
 import com.veras.mythOrFactLGBT.dto.RegisterRequest;
 import com.veras.mythOrFactLGBT.model.User;
-import com.veras.mythOrFactLGBT.security.JwtUtil; // Will be created later
+import com.veras.mythOrFactLGBT.security.JwtUtil;
 import com.veras.mythOrFactLGBT.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,7 +16,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager; // Will be created later
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

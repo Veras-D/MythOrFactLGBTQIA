@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface GameHistoryRepository extends JpaRepository<GameHistory, Long> {
     List<GameHistory> findByUserOrderByPlayedAtDesc(User user);
-    List<GameHistory> findByUserIdOrderByScoreDesc(Long userId); // Example of finding by user ID
+    List<GameHistory> findByUserIdOrderByScoreDesc(Long userId);
 }

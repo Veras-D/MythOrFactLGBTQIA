@@ -29,7 +29,6 @@ public class UserResponse {
     @Schema(description = "User's highest achieved score in the game", example = "5000")
     private Integer highestScore;
 
-    // Custom constructor
     public UserResponse(Long id, String username, String email, Timestamp createdAt, Integer highestScore) {
         this.id = id;
         this.username = username;

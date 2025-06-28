@@ -18,7 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@Component // Mark as a Spring component so it can be picked up
+@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired

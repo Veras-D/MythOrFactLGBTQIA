@@ -3,20 +3,18 @@ package com.veras.mythOrFactLGBT.controller;
 import com.veras.mythOrFactLGBT.dto.UserResponse;
 import com.veras.mythOrFactLGBT.model.User;
 import com.veras.mythOrFactLGBT.service.UserService;
-// Import for @PreAuthorize if using method-level security
-// import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import io.swagger.v3.oas.annotations.Operation; // Added
-import io.swagger.v3.oas.annotations.media.ArraySchema; // Added
-import io.swagger.v3.oas.annotations.media.Content; // Added
-import io.swagger.v3.oas.annotations.media.Schema; // Added
-import io.swagger.v3.oas.annotations.responses.ApiResponse; // Added
-import io.swagger.v3.oas.annotations.tags.Tag; // Added
-import java.util.List; // Added
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 
 
 @RestController
@@ -32,7 +30,6 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    // @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
             return ResponseEntity.status(401).body("User not authenticated");
