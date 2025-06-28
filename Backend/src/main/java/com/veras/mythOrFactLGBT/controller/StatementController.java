@@ -6,9 +6,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +24,7 @@ public class StatementController {
     }
 
     @PostMapping
-    
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Statement> createStatement(@Valid @RequestBody Statement statement) {
         Statement savedStatement = statementService.saveStatement(statement);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedStatement);
@@ -56,7 +55,8 @@ public class StatementController {
     }
 
     @PutMapping("/{id}")
-    
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Statement> updateStatement(@PathVariable Long id, @Valid @RequestBody Statement statementDetails) {
         Optional<Statement> optionalStatement = statementService.getStatementById(id);
         if (optionalStatement.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -72,7 +72,7 @@ public class StatementController {
     }
 
     @DeleteMapping("/{id}")
-    
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteStatement(@PathVariable Long id) {
         if (statementService.getStatementById(id).isEmpty()) {
             return ResponseEntity.notFound().build();
