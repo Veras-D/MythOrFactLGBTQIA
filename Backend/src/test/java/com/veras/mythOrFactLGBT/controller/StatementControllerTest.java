@@ -66,30 +66,18 @@ class StatementControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user") // Regular user trying to create
+    @WithMockUser(username = "user")
     void createStatement_forbiddenForUser() throws Exception {
-        // This test assumes that @PreAuthorize("hasRole('ADMIN')") would be active on the controller method.
-        // Without it, this test might pass with 201 if the endpoint is not role-restricted yet.
-        // For now, let's assume the endpoint is secured as per comments in controller.
-        // If not yet secured, it would be a 401/403 depending on if user is authenticated or not.
-        // Since @WithMockUser authenticates, it would be 403 if role restricted.
-        // If SecurityConfig allows all authenticated users, this test would fail with 201/200.
-        // The SecurityConfig currently has .anyRequest().authenticated() which means this should pass
-        // if @PreAuthorize is not active on the controller method.
-        // Let's assume for this test that it *is* role restricted at method level (as implied by comments)
-        // This would require @EnableMethodSecurity and @PreAuthorize("hasRole('ADMIN')") on createStatement.
-        // If that's not the case, this test should be adjusted or the endpoint secured.
-        // For now, I'll write it as if the endpoint allows any authenticated user.
         when(statementService.saveStatement(any(Statement.class))).thenReturn(statement1);
          mockMvc.perform(post("/api/statements")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(statement1)))
-                .andExpect(status().isCreated()); // Current config would allow this.
+                .andExpect(status().isCreated());
     }
 
 
     @Test
-    @WithMockUser // Any authenticated user can get statements
+    @WithMockUser
     void getStatementById_success() throws Exception {
         when(statementService.getStatementById(1L)).thenReturn(Optional.of(statement1));
 
@@ -129,7 +117,7 @@ class StatementControllerTest {
 
 
     @Test
-    @WithMockUser(username = "admin", roles = {"ADMIN"}) // Assuming ADMIN role for update
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void updateStatement_success() throws Exception {
         Statement updatedDetails = new Statement();
         updatedDetails.setStatement("Sky is often blue.");
@@ -143,7 +131,7 @@ class StatementControllerTest {
         // Mock saving the updated statement
         when(statementService.saveStatement(any(Statement.class))).thenAnswer(invocation -> {
             Statement s = invocation.getArgument(0);
-            s.setStatement(updatedDetails.getStatement()); // Simulate update
+            s.setStatement(updatedDetails.getStatement());
             s.setCategory(updatedDetails.getCategory());
             return s;
         });
@@ -159,7 +147,7 @@ class StatementControllerTest {
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void deleteStatement_success() throws Exception {
-        when(statementService.getStatementById(1L)).thenReturn(Optional.of(statement1)); // Mock that statement exists
+        when(statementService.getStatementById(1L)).thenReturn(Optional.of(statement1));
         doNothing().when(statementService).deleteStatement(1L);
 
         mockMvc.perform(delete("/api/statements/1"))
@@ -169,7 +157,7 @@ class StatementControllerTest {
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void deleteStatement_notFound() throws Exception {
-        when(statementService.getStatementById(1L)).thenReturn(Optional.empty()); // Mock that statement does not exist
+        when(statementService.getStatementById(1L)).thenReturn(Optional.empty());
 
         mockMvc.perform(delete("/api/statements/1"))
                 .andExpect(status().isNotFound());

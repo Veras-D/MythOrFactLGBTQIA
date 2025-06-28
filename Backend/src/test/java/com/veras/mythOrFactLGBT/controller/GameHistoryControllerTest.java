@@ -100,7 +100,7 @@ class GameHistoryControllerTest {
     @Test
     @WithMockUser(username = "testuser")
     void recordGameHistory_missingScore() throws Exception {
-        Map<String, Integer> payload = new HashMap<>(); // Empty payload
+        Map<String, Integer> payload = new HashMap<>();
 
         mockMvc.perform(post("/api/gamehistory")
                 .contentType(MediaType.APPLICATION_JSON)

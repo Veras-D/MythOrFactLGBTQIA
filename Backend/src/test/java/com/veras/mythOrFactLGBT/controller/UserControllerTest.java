@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.test.context.support.WithMockUser; // Important for secured endpoints
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.sql.Timestamp;
@@ -29,7 +29,7 @@ class UserControllerTest {
     private UserService userService;
 
     @Test
-    @WithMockUser(username = "testuser") // Simulates an authenticated user
+    @WithMockUser(username = "testuser")
     void getCurrentUser_success() throws Exception {
         User user = new User();
         user.setId(1L);
@@ -48,14 +48,12 @@ class UserControllerTest {
 
     @Test
     void getCurrentUser_unauthenticated() throws Exception {
-        // No @WithMockUser, so request is anonymous
-        // Spring Security by default returns 401 if not authenticated and endpoint is secured
         mockMvc.perform(get("/api/users/me"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    @WithMockUser(username="testuser", authorities={"ROLE_USER"}) // or roles="USER"
+    @WithMockUser(username="testuser", authorities={"ROLE_USER"})
     void getUserById_success() throws Exception {
         User user = new User();
         user.setId(1L);

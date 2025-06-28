@@ -45,7 +45,7 @@ class UserServiceImplTest {
         when(passwordEncoder.encode(user.getPassword())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
             User savedUser = invocation.getArgument(0);
-            savedUser.setId(1L); // Simulate saving and getting an ID
+            savedUser.setId(1L);
             return savedUser;
         });
 

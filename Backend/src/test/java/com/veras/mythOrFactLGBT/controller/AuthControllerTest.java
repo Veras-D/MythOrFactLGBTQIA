@@ -17,11 +17,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.MockMvc;
 import com.veras.mythOrFactLGBT.security.JwtUtil;
 
-import java.util.List; // Added import
-import java.util.Optional; // Added import
+import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock; // Added import
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -40,10 +40,10 @@ class AuthControllerTest {
     private UserService userService;
 
     @MockBean
-    private AuthenticationManager authenticationManager; // Mock AuthenticationManager
+    private AuthenticationManager authenticationManager;
 
     @MockBean
-    private JwtUtil jwtUtil; // Mock JwtUtil
+    private JwtUtil jwtUtil;
 
     @Test
     void registerUser_success() throws Exception {
@@ -88,7 +88,6 @@ class AuthControllerTest {
         loginRequest.setPassword("password");
 
         Authentication authentication = mock(Authentication.class);
-        // Spring Security's UserDetails (ensure this one is used, not your model.User directly for principal)
         org.springframework.security.core.userdetails.User userDetails =
             new org.springframework.security.core.userdetails.User("testuser", "password", List.of());
 
@@ -98,7 +97,7 @@ class AuthControllerTest {
         when(authentication.getPrincipal()).thenReturn(userDetails);
 
 
-        User appUser = new User(); // Your application's User model
+        User appUser = new User();
         appUser.setId(1L);
         appUser.setUsername("testuser");
         when(userService.findByUsername("testuser")).thenReturn(Optional.of(appUser));

@@ -40,7 +40,7 @@ class GameHistoryServiceImplTest {
         user = new User();
         user.setId(1L);
         user.setUsername("testuser");
-        user.setHighestScore(100); // Initial highest score
+        user.setHighestScore(100);
 
         gameHistory = new GameHistory();
         gameHistory.setId(1L);
@@ -51,29 +51,28 @@ class GameHistoryServiceImplTest {
 
     @Test
     void recordGame_newHighScore() {
-        when(userRepository.save(any(User.class))).thenReturn(user); // Mock user save
+        when(userRepository.save(any(User.class))).thenReturn(user);
         when(gameHistoryRepository.save(any(GameHistory.class))).thenReturn(gameHistory);
 
         GameHistory recordedGame = gameHistoryService.recordGame(user, 150);
 
         assertNotNull(recordedGame);
         assertEquals(150, recordedGame.getScore());
-        assertEquals(150, user.getHighestScore()); // Verify highest score updated on user object
-        verify(userRepository).save(user); // Verify user was saved due to new high score
+        assertEquals(150, user.getHighestScore());
+        verify(userRepository).save(user);
         verify(gameHistoryRepository).save(any(GameHistory.class));
     }
 
     @Test
     void recordGame_scoreNotHigher() {
-        // No need to mock userRepository.save() if score isn't higher, as it shouldn't be called for user.
         when(gameHistoryRepository.save(any(GameHistory.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        GameHistory recordedGame = gameHistoryService.recordGame(user, 50); // Score is lower than 100
+        GameHistory recordedGame = gameHistoryService.recordGame(user, 50);
 
         assertNotNull(recordedGame);
         assertEquals(50, recordedGame.getScore());
-        assertEquals(100, user.getHighestScore()); // Highest score should remain 100
-        verify(userRepository, never()).save(user); // User should not be saved
+        assertEquals(100, user.getHighestScore());
+        verify(userRepository, never()).save(user);
         verify(gameHistoryRepository).save(any(GameHistory.class));
     }
 
@@ -81,7 +80,7 @@ class GameHistoryServiceImplTest {
     void recordGame_scoreEqualsHighScore() {
         when(gameHistoryRepository.save(any(GameHistory.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        GameHistory recordedGame = gameHistoryService.recordGame(user, 100); // Score is equal to current high score
+        GameHistory recordedGame = gameHistoryService.recordGame(user, 100);
 
         assertNotNull(recordedGame);
         assertEquals(100, recordedGame.getScore());
