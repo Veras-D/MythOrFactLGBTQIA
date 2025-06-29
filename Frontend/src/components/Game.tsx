@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Statement, getRandomStatement, getDifficultyColor, getDifficultyLabel, getCategoryColor } from '../data/statements';
 import { Button } from './ui/button';
@@ -18,11 +18,27 @@ const Game: React.FC = () => {
   const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
   const [isAnswering, setIsAnswering] = useState(false);
 
-  useEffect(() => {
-    startNewGame();
-  }, []);
+  const endGame = useCallback(() => {
+    setGameOver(true);
+    if (user) {
+      updateHighScore(score);
+      saveGameHistory(score);
+    }
+  }, [user, score, updateHighScore, saveGameHistory]);
 
-  const startNewGame = () => {
+  const loadNextStatement = useCallback((used: number[]) => {
+    const statement = getRandomStatement(used);
+    if (statement) {
+      setCurrentStatement(statement);
+      setShowExplanation(false);
+      setSelectedAnswer(null);
+      setIsAnswering(false);
+    } else {
+      endGame();
+    }
+  }, [endGame]);
+
+  const startNewGame = useCallback(() => {
     setScore(0);
     setGameOver(false);
     setShowExplanation(false);
@@ -31,22 +47,13 @@ const Game: React.FC = () => {
     setSelectedAnswer(null);
     setIsAnswering(false);
     loadNextStatement([]);
-  };
+  }, [loadNextStatement]);
 
-  const loadNextStatement = (used: number[]) => {
-    const statement = getRandomStatement(used);
-    if (statement) {
-      setCurrentStatement(statement);
-      setShowExplanation(false);
-      setSelectedAnswer(null);
-      setIsAnswering(false);
-    } else {
-      // No more statements available
-      endGame();
-    }
-  };
+  useEffect(() => {
+    startNewGame();
+  }, [startNewGame]);
 
-  const handleAnswer = (answer: boolean) => {
+  const handleAnswer = useCallback((answer: boolean) => {
     if (isAnswering || !currentStatement) return;
 
     setIsAnswering(true);
@@ -63,7 +70,6 @@ const Game: React.FC = () => {
         icon: <Trophy className="w-4 h-4 text-yellow-400" />
       });
 
-      // Continue to next question after delay
       setTimeout(() => {
         const newUsed = [...usedStatements, currentStatement.id];
         setUsedStatements(newUsed);
@@ -77,15 +83,7 @@ const Game: React.FC = () => {
         endGame();
       }, 3000);
     }
-  };
-
-  const endGame = () => {
-    setGameOver(true);
-    if (user) {
-      updateHighScore(score);
-      saveGameHistory(score);
-    }
-  };
+  }, [isAnswering, currentStatement, usedStatements, loadNextStatement, endGame]);
 
   if (gameOver) {
     return (
