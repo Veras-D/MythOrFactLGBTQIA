@@ -18,7 +18,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 @Tag(name = "Users & Leaderboard", description = "User specific operations and global leaderboard")
 public class UserController {
 
