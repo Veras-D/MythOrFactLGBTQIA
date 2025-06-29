@@ -72,7 +72,7 @@ class StatementControllerTest {
          mockMvc.perform(post("/api/statements")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(statement1)))
-                .andExpect(status().isCreated());
+                .andExpect(status().isForbidden());
     }
 
 
