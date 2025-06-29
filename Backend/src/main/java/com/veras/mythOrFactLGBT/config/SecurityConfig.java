@@ -43,9 +43,9 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authz -> authz
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/gamehistory").authenticated()
                 .anyRequest().permitAll()
             );
-
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
