@@ -94,7 +94,7 @@ class GameHistoryControllerTest {
                 .content(objectMapper.writeValueAsString(payload)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.score").value(150))
-                .andExpect(jsonPath("$.user.id").value(testUser.getId()));
+                .andExpect(jsonPath("$.userId").value(testUser.getId()));
     }
 
     @Test
