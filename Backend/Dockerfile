@@ -2,21 +2,21 @@ FROM ubuntu:latest AS build
 
 WORKDIR /app
 
-RUN apt-get update
-RUN apt-get install openjdk-17-jdk -y
+RUN apt-get update \
+  && apt-get install -y openjdk-17-jdk maven
 
 COPY pom.xml .
-COPY src ./src
+RUN mvn dependency:go-offline
 
-RUN apt-get install maven -y
-RUN mvn clean install -DskipTests -Pdev
+COPY src ./src
+RUN mvn clean package -DskipTests -Pdev
 
 FROM openjdk:17-jdk-slim
 
 WORKDIR /app
 
-COPY --from=build /target/*.jar app.jar
+COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT [ "java", "-jar", "app.jar" ]
+ENTRYPOINT ["java", "-jar", "app.jar"]
