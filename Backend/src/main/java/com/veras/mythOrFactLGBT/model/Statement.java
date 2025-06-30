@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.AllArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "statements")
@@ -25,6 +27,7 @@ public class Statement {
     private boolean isFact;
 
     @Lob
+    @JdbcTypeCode(SqlTypes.LONG32VARCHAR)
     @Column(nullable = false, columnDefinition = "TEXT")
     private String explanation;
 
