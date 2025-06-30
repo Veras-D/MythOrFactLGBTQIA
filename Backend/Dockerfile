@@ -9,7 +9,7 @@ COPY pom.xml .
 COPY src ./src
 
 RUN apt-get install maven -y
-RUN mvn clean package -DskipTests -Pdev
+RUN mvn clean install -DskipTests -Pdev
 
 FROM openjdk:17-jdk-slim
 
