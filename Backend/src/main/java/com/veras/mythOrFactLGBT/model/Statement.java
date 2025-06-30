@@ -19,7 +19,7 @@ public class Statement {
     private Long id;
 
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String statement;
 
     @Column(name = "is_fact", nullable = false)
