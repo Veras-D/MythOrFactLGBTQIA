@@ -1,16 +1,20 @@
-FROM ubuntu:latest AS build
+# Build stage
+FROM maven:3.8.6-openjdk-17 AS build
 
-RUN apt-get update
-RUN apt-get install openjdk-17-jdk -y
-COPY . .
+WORKDIR /app
 
-RUN apt-get install maven -y
-RUN mvn clean install -DskipTests
+COPY pom.xml .
+COPY src ./src
 
+RUN mvn clean package -DskipTests -Pprod
+
+# Runtime stage
 FROM openjdk:17-jdk-slim
+
+WORKDIR /app
+
+COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
 
-COPY --from=build /target/*.jar app.jar
-
-ENTRYPOINT [ "java", "-jar", "app.jar" ]
+ENTRYPOINT ["java", "-jar", "app.jar"]
