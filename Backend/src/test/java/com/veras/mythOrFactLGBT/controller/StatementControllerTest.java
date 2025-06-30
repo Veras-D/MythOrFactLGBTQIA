@@ -54,7 +54,7 @@ class StatementControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles = {"ADMIN"}) // Assuming ADMIN role for creation
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void createStatement_success() throws Exception {
         when(statementService.saveStatement(any(Statement.class))).thenReturn(statement1);
 
