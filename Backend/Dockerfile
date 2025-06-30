@@ -9,7 +9,7 @@ COPY pom.xml .
 RUN mvn dependency:go-offline
 
 COPY src ./src
-RUN mvn clean package -DskipTests -Pdev
+RUN mvn clean package -DskipTests -Pprod
 
 FROM openjdk:17-jdk-slim
 
