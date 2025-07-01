@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -58,5 +59,18 @@ public class UserController {
     public ResponseEntity<List<UserResponse>> getGlobalLeaderboard() {
         List<UserResponse> leaderboard = userService.getGlobalLeaderboard();
         return ResponseEntity.ok(leaderboard);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Delete a user by ID", description = "Deletes a user from the system. Requires ADMIN role.")
+    @ApiResponse(responseCode = "204", description = "User successfully deleted")
+    @ApiResponse(responseCode = "404", description = "User not found")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        if (userService.findById(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }

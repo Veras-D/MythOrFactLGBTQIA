@@ -11,4 +11,5 @@ public interface UserService {
     Optional<User> findByEmail(String email);
     Optional<User> findById(Long id);
     List<UserResponse> getGlobalLeaderboard();
+    void deleteUser(Long id);
 }

@@ -61,4 +61,10 @@ public class UserServiceImpl implements UserService {
                        .map(UserResponse::fromUser)
                        .collect(Collectors.toList());
     }
+
+    @Override
+    @Transactional
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
 }
