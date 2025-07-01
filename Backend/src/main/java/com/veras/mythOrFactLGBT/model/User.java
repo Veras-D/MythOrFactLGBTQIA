@@ -37,6 +37,9 @@ public class User {
     @Column(name = "highest_score", columnDefinition = "INT DEFAULT 0")
     private Integer highestScore = 0;
 
+    @Column(name = "role")
+    private String role;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<GameHistory> gameHistories;
 }
