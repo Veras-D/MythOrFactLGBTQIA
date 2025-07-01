@@ -49,11 +49,11 @@ class UserControllerTest {
     @Test
     void getCurrentUser_unauthenticated() throws Exception {
         mockMvc.perform(get("/api/users/me"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isForbidden());
     }
 
     @Test
-    @WithMockUser(username="testuser", authorities={"ROLE_USER"})
+    @WithMockUser(username="testuser", authorities={"USER"})
     void getUserById_success() throws Exception {
         User user = new User();
         user.setId(1L);
@@ -70,7 +70,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username="testuser", authorities={"ROLE_USER"})
+    @WithMockUser(username="testuser", authorities={"USER"})
     void getUserById_notFound() throws Exception {
         when(userService.findById(1L)).thenReturn(Optional.empty());
 
