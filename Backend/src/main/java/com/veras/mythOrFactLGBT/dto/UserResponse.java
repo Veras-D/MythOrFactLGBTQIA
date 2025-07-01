@@ -29,12 +29,16 @@ public class UserResponse {
     @Schema(description = "User's highest achieved score in the game", example = "5000")
     private Integer highestScore;
 
-    public UserResponse(Long id, String username, String email, Timestamp createdAt, Integer highestScore) {
+    @Schema(description = "Role of the user", example = "USER")
+    private String role;
+
+    public UserResponse(Long id, String username, String email, Timestamp createdAt, Integer highestScore, String role) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.createdAt = createdAt;
         this.highestScore = highestScore;
+        this.role = role;
     }
 
     public static UserResponse fromUser(User user) {
@@ -46,7 +50,8 @@ public class UserResponse {
             user.getUsername(),
             user.getEmail(),
             user.getCreatedAt(),
-            user.getHighestScore()
+            user.getHighestScore(),
+            user.getRole()
         );
     }
 }
