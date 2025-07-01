@@ -44,6 +44,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/gamehistory").authenticated()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/users/me").authenticated()
                 .anyRequest().permitAll()
             );
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
