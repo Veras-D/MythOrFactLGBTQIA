@@ -8,7 +8,7 @@ RUN apt-get update \
 COPY pom.xml .
 RUN mvn dependency:go-offline
 
-COPY src ./src
+COPY src/main ./src
 RUN mvn clean package -DskipTests -Pprod
 
 FROM openjdk:17-jdk-slim
