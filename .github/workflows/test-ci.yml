@@ -10,7 +10,24 @@ jobs:
   backend-test:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_DEV_PASSWORD }}
+          MYSQL_DATABASE: lgbt-game
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
     env:
+      DB_DEV_USERNAME: ${{ secrets.DB_DEV_USERNAME }}
+      DB_DEV_PASSWORD: ${{ secrets.DB_DEV_PASSWORD }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
       SPRING_PROFILES_ACTIVE: dev
 
     steps:
@@ -23,10 +40,23 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Wait for MySQL
+        run: |
+          while ! mysqladmin ping -h"127.0.0.1" --silent; do
+            sleep 1
+          done
+
       - name: Run backend tests
         run: |
           cd Backend
-          SPRING_PROFILES_ACTIVE=dev mvn clean test -Pdev
+          mvn clean test
 
   frontend-test:
     runs-on: ubuntu-latest
