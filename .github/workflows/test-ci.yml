@@ -58,6 +58,8 @@ jobs:
           SPRING_PROFILES_ACTIVE: dev
         run: |
           cd Backend
+          mvn flyway:clean
+          mvn flyway:repair
           mvn clean test
 
   frontend-test:
