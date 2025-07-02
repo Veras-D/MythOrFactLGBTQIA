@@ -120,7 +120,7 @@
                 </dependency>
                 <dependency>
                     <groupId>org.flywaydb</groupId>
-                    <artifactId>flyway-database-mysql</artifactId>
+                    <artifactId>flyway-mysql</artifactId>
                 </dependency>
 
             </dependencies>
