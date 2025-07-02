@@ -15,7 +15,7 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: lgbt-game
+          MYSQL_DATABASE: lgbt_game
           MYSQL_USER: testuser
           MYSQL_PASSWORD: testpass
         ports:
