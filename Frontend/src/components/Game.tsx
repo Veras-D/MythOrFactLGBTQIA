@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Statement, getRandomStatement, getDifficultyColor, getDifficultyLabel, getCategoryColor } from '../data/statements';
+import { Statement, fetchStatements, getRandomStatement, getDifficultyColor, getDifficultyLabel, getCategoryColor } from '../data/statements';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
@@ -26,8 +26,8 @@ const Game: React.FC = () => {
     }
   }, [user, score, updateHighScore, saveGameHistory]);
 
-  const loadNextStatement = useCallback((used: number[]) => {
-    const statement = getRandomStatement(used);
+  const loadNextStatement = useCallback(async (used: number[]) => {
+    const statement = await getRandomStatement(used);
     if (statement) {
       setCurrentStatement(statement);
       setShowExplanation(false);
@@ -60,7 +60,7 @@ const Game: React.FC = () => {
     setSelectedAnswer(answer);
     setShowExplanation(true);
 
-    const isCorrect = answer === currentStatement.is_fact;
+    const isCorrect = answer === currentStatement.fact;
 
     if (isCorrect) {
       const points = currentStatement.difficulty * 10;
@@ -188,12 +188,12 @@ const Game: React.FC = () => {
           ) : (
             <div className="space-y-4">
               <div className={`p-4 rounded-lg border-2 ${
-                selectedAnswer === currentStatement.is_fact
+                selectedAnswer === currentStatement.fact
                   ? 'bg-green-100 border-green-500'
                   : 'bg-red-100 border-red-500'
               }`}>
                 <div className="flex items-center gap-2 mb-2">
-                  {selectedAnswer === currentStatement.is_fact ? (
+                  {selectedAnswer === currentStatement.fact ? (
                     <>
                       <Check className="w-6 h-6 text-green-600" />
                       <span className="text-green-700 font-bold text-lg">Correct!</span>
@@ -206,7 +206,7 @@ const Game: React.FC = () => {
                   )}
                 </div>
                 <p className="text-gray-900 font-semibold">
-                  This statement is a {currentStatement.is_fact ? 'FACT' : 'MYTH'}
+                  This statement is a {currentStatement.fact ? 'FACT' : 'MYTH'}
                 </p>
               </div>
 
