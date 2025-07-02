@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      SPRING_PROFILES_ACTIVE: test
+      SPRING_PROFILES_ACTIVE: dev
 
     steps:
       - name: Checkout repository
@@ -26,7 +26,7 @@ jobs:
       - name: Run backend tests
         run: |
           cd Backend
-          SPRING_PROFILES_ACTIVE=test mvn clean test -Ptest
+          SPRING_PROFILES_ACTIVE=dev mvn clean test -Pdev
 
   frontend-test:
     runs-on: ubuntu-latest
