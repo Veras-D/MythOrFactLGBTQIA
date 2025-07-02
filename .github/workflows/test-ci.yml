@@ -56,7 +56,7 @@ jobs:
       - name: Run backend tests
         run: |
           cd Backend
-          mvn clean test
+          mvn clean test -Dspring.flyway.enabled=false
 
   frontend-test:
     runs-on: ubuntu-latest
