@@ -14,19 +14,21 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: root
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_DEV_PASSWORD }}
           MYSQL_DATABASE: lgbt-game
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -uroot -proot"
+          --health-cmd="mysqladmin ping"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=5
+          --health-retries=3
 
     env:
-      SPRING_PROFILES_ACTIVE: test
-      SPRING_FLYWAY_ENABLED: "false"  # Desabilita o Flyway GLOBALMENTE
+      DB_DEV_USERNAME: ${{ secrets.DB_DEV_USERNAME }}
+      DB_DEV_PASSWORD: ${{ secrets.DB_DEV_PASSWORD }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      SPRING_PROFILES_ACTIVE: dev
 
     steps:
       - name: Checkout repository
@@ -47,32 +49,18 @@ jobs:
 
       - name: Wait for MySQL
         run: |
-          for i in {1..30}; do
-            if mysqladmin ping -h"127.0.0.1" -uroot -proot --silent; then
-              echo "MySQL is ready"
-              break
-            fi
-            echo "Waiting for MySQL to start... (attempt $i)"
-            sleep 2
+          while ! mysqladmin ping -h"127.0.0.1" --silent; do
+            sleep 1
           done
 
-      - name: Disable Flyway completely
+      - name: Run backend tests
         run: |
           cd Backend
-          # Cria/Clear arquivo de propriedades de teste
-          echo "# Configurações para TESTES (Flyway DESABILITADO)" > src/test/resources/application-test.properties
-          echo "spring.flyway.enabled=false" >> src/test/resources/application-test.properties
-          echo "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration" >> src/test/resources/application-test.properties
-
-      - name: Run tests
-        run: |
-          cd Backend
-          mvn clean test -Dspring.profiles.active=test
-          # Mostra logs se falhar
-          cat target/surefire-reports/*.txt || true
+          mvn clean test -Ptest
 
   frontend-test:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
