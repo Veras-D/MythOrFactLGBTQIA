@@ -54,6 +54,7 @@ class UserServiceImplTest {
         assertNotNull(registeredUser);
         assertEquals("encodedPassword", registeredUser.getPassword());
         assertEquals(1L, registeredUser.getId());
+        assertEquals("USER", registeredUser.getRole());
         verify(userRepository).save(user);
     }
 
