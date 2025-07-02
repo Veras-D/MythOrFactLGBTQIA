@@ -46,9 +46,84 @@ An interactive full-stack quiz game designed to educate and challenge players' k
 - **Documentation**: OpenAPI 3 / Swagger UI
 - **Build Tool**: Maven
 
-### Database
+## 🗄️ Database Schema
+
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/2d21cecb-bfd4-4afe-9363-9c246fc66504"></img>
+</div>
+
+### Development & Production
 - **Development**: MySQL 8.x
 - **Production**: PostgreSQL (Supabase)
+
+### Tables Overview
+
+#### Users Table
+Stores user account information and authentication data.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | int8 | Primary key, auto-increment |
+| `username` | varchar | Unique username for login |
+| `email` | varchar | User email address |
+| `password` | varchar | Encrypted password hash |
+| `created_at` | timestamp | Account creation timestamp |
+| `highest_score` | int4 | User's best game score |
+| `role` | varchar | User role (USER, ADMIN) |
+
+#### Statements Table
+Contains quiz questions with answers and metadata.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | int8 | Primary key, auto-increment |
+| `statement` | text | The quiz question/statement |
+| `is_fact` | bool | True if statement is fact, false if myth |
+| `explanation` | text | Educational explanation for the answer |
+| `difficulty` | int4 | Difficulty level (1=Easy, 2=Hard, 3=Expert) |
+| `category` | varchar | Topic category for organization |
+
+#### Game History Table
+Tracks individual game sessions and player performance.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | int8 | Primary key, auto-increment |
+| `user_id` | int8 | Foreign key referencing users.id |
+| `score` | int4 | Final score achieved in the game |
+| `played_at` | timestamp | When the game session occurred |
+
+#### Flyway Schema History Table
+Migration tracking table managed by Flyway.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `installed_rank` | int4 | Migration execution order |
+| `version` | varchar | Migration version number |
+| `description` | varchar | Migration description |
+| `type` | varchar | Migration type (SQL, JAVA, etc.) |
+| `script` | varchar | Migration script filename |
+| `checksum` | int4 | Script checksum for validation |
+| `installed_by` | varchar | User who executed migration |
+| `installed_on` | timestamp | Migration execution timestamp |
+| `execution_time` | int4 | Time taken to execute (ms) |
+| `success` | bool | Whether migration succeeded |
+
+### Relationships
+
+- `game_history.user_id` → `users.id` (Many-to-One)
+  - Each game session belongs to one user
+  - Users can have multiple game sessions
+
+### Database Setup
+
+#### Local Development (MySQL)
+```sql
+CREATE DATABASE lgbt-game CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+#### Production (PostgreSQL)
+The production database is hosted on Supabase with automatic backups and scaling.
 
 ## 🚀 Getting Started
 
