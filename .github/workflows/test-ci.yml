@@ -56,7 +56,7 @@ jobs:
       - name: Run backend tests
         run: |
           cd Backend
-          mvn clean test -Ptest
+          SPRING_PROFILES_ACTIVE=test mvn clean test -Ptest
 
   frontend-test:
     runs-on: ubuntu-latest
