@@ -16,8 +16,6 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: lgbt-game
-          MYSQL_USER: testuser
-          MYSQL_PASSWORD: testpass
         ports:
           - 3306:3306
         options: >-
@@ -27,10 +25,8 @@ jobs:
           --health-retries=5
 
     env:
-      DB_URL: jdbc:mysql://localhost:3306/lgbt-game?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-      DB_USER: testuser
-      DB_PASSWORD: testpass
       SPRING_PROFILES_ACTIVE: test
+      SPRING_FLYWAY_ENABLED: "false"  # Desabilita o Flyway GLOBALMENTE
 
     steps:
       - name: Checkout repository
@@ -59,27 +55,20 @@ jobs:
             echo "Waiting for MySQL to start... (attempt $i)"
             sleep 2
           done
-          # Configura usuário de teste
-          mysql -h 127.0.0.1 -uroot -proot -e "CREATE USER IF NOT EXISTS '$DB_USER'@'%' IDENTIFIED BY '$DB_PASSWORD';"
-          mysql -h 127.0.0.1 -uroot -proot -e "GRANT ALL PRIVILEGES ON \`lgbt-game\`.* TO '$DB_USER'@'%';"
-          mysql -h 127.0.0.1 -uroot -proot -e "FLUSH PRIVILEGES;"
 
-      - name: Configure test properties
+      - name: Disable Flyway completely
         run: |
           cd Backend
-          echo "spring.datasource.url=$DB_URL" > src/test/resources/application-test.properties
-          echo "spring.datasource.username=$DB_USER" >> src/test/resources/application-test.properties
-          echo "spring.datasource.password=$DB_PASSWORD" >> src/test/resources/application-test.properties
-          # Desabilita completamente o Flyway para testes
+          # Cria/Clear arquivo de propriedades de teste
+          echo "# Configurações para TESTES (Flyway DESABILITADO)" > src/test/resources/application-test.properties
           echo "spring.flyway.enabled=false" >> src/test/resources/application-test.properties
-          # Configuração para usar H2 em memória para testes (opcional)
-          echo "spring.test.database.replace=NONE" >> src/test/resources/application-test.properties
+          echo "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration" >> src/test/resources/application-test.properties
 
       - name: Run tests
         run: |
           cd Backend
           mvn clean test -Dspring.profiles.active=test
-          # Mostra logs em caso de falha
+          # Mostra logs se falhar
           cat target/surefire-reports/*.txt || true
 
   frontend-test:
