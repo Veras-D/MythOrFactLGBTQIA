@@ -70,11 +70,10 @@ jobs:
           echo "spring.datasource.url=$DB_URL" > src/test/resources/application-test.properties
           echo "spring.datasource.username=$DB_USER" >> src/test/resources/application-test.properties
           echo "spring.datasource.password=$DB_PASSWORD" >> src/test/resources/application-test.properties
-          echo "spring.flyway.url=$DB_URL" >> src/test/resources/application-test.properties
-          echo "spring.flyway.user=$DB_USER" >> src/test/resources/application-test.properties
-          echo "spring.flyway.password=$DB_PASSWORD" >> src/test/resources/application-test.properties
-          echo "spring.flyway.clean-disabled=false" >> src/test/resources/application-test.properties
-          echo "spring.flyway.repair-on-migrate=true" >> src/test/resources/application-test.properties
+          # Desabilita completamente o Flyway para testes
+          echo "spring.flyway.enabled=false" >> src/test/resources/application-test.properties
+          # Configuração para usar H2 em memória para testes (opcional)
+          echo "spring.test.database.replace=NONE" >> src/test/resources/application-test.properties
 
       - name: Run tests
         run: |
