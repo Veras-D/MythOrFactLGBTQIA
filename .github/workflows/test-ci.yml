@@ -14,21 +14,17 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_DEV_PASSWORD }}
+          MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: lgbt-game
+          MYSQL_USER: testuser
+          MYSQL_PASSWORD: testpass
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping"
+          --health-cmd="mysqladmin ping -u root -proot"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=3
-
-    env:
-      DB_DEV_USERNAME: ${{ secrets.DB_DEV_USERNAME }}
-      DB_DEV_PASSWORD: ${{ secrets.DB_DEV_PASSWORD }}
-      JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      SPRING_PROFILES_ACTIVE: dev
+          --health-retries=5
 
     steps:
       - name: Checkout repository
@@ -49,11 +45,17 @@ jobs:
 
       - name: Wait for MySQL
         run: |
-          while ! mysqladmin ping -h"127.0.0.1" --silent; do
+          sudo apt-get install -y mysql-client
+          while ! mysqladmin ping -h"127.0.0.1" -u"testuser" -p"testpass" --silent; do
             sleep 1
           done
 
       - name: Run backend tests
+        env:
+          DB_DEV_USERNAME: testuser
+          DB_DEV_PASSWORD: testpass
+          JWT_SECRET: testsecret
+          SPRING_PROFILES_ACTIVE: dev
         run: |
           cd Backend
           mvn clean test
