@@ -55,6 +55,7 @@ An interactive full-stack quiz game designed to educate and challenge players' k
 ### Development & Production
 - **Development**: MySQL 8.x
 - **Production**: PostgreSQL (Supabase)
+- **Test**: H2 2.3.x
 
 ### Tables Overview
 
