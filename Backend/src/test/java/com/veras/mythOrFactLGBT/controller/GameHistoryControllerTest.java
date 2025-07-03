@@ -122,7 +122,7 @@ class GameHistoryControllerTest {
         mockMvc.perform(post("/api/gamehistory")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(payload)))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
 
