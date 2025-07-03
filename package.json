@@ -19,5 +19,6 @@
   "license": "ISC",
   "devDependencies": {
     "turbo": "^2.5.4"
-  }
+  },
+  "packageManager": "npm@10.8.1"
 }
