@@ -1,0 +1,38 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build": {
+      "outputs": ["dist/**", "target/**"]
+    },
+    "test": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "Backend#build": {
+      "outputs": ["target/**"]
+    },
+    "Backend#test": {
+      "dependsOn": ["Backend#build"],
+      "outputs": []
+    },
+    "Backend#dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "Frontend#build": {
+      "outputs": ["dist/**"]
+    },
+    "Frontend#test": {
+      "dependsOn": ["Frontend#build"],
+      "outputs": []
+    },
+    "Frontend#dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

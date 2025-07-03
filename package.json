@@ -1,0 +1,23 @@
+{
+  "name": "myth-or-fact-lgbt-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo for Myth or Fact LGBT+ game",
+  "main": "index.js",
+  "workspaces": [
+    "Frontend",
+    "Backend"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint" 
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "turbo": "^2.5.4"
+  }
+}
