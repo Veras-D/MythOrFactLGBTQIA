@@ -2,6 +2,7 @@ package com.veras.mythOrFactLGBT.controller;
 
 import com.veras.mythOrFactLGBT.config.SecurityConfig;
 import com.veras.mythOrFactLGBT.model.Statement;
+import com.veras.mythOrFactLGBT.security.JwtUtil;
 import com.veras.mythOrFactLGBT.security.UserDetailsServiceImpl;
 import com.veras.mythOrFactLGBT.service.StatementService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,7 +19,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.context.ActiveProfiles;
-import com.veras.mythOrFactLGBT.security.JwtUtil;
 
 import java.util.Collections;
 import java.util.Arrays;
@@ -53,9 +53,6 @@ class StatementControllerTest {
 
     @MockBean
     private JwtUtil jwtUtil;
-
-    @MockBean
-    private UserDetailsService userDetailsService;
 
     @MockBean
     private UserDetailsServiceImpl userDetailsServiceImpl;

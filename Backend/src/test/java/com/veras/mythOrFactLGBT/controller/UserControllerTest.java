@@ -1,6 +1,7 @@
 package com.veras.mythOrFactLGBT.controller;
 
 import com.veras.mythOrFactLGBT.model.User;
+import com.veras.mythOrFactLGBT.security.JwtUtil;
 import com.veras.mythOrFactLGBT.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ class UserControllerTest {
     @MockBean
     private UserService userService;
 
+    @MockBean
+    private JwtUtil jwtUtil;
+
     @Test
     @WithMockUser(username = "testuser")
     void getCurrentUser_success() throws Exception {
@@ -51,7 +55,7 @@ class UserControllerTest {
     @Test
     void getCurrentUser_unauthenticated() throws Exception {
         mockMvc.perform(get("/api/users/me"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
