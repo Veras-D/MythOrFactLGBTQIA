@@ -17,7 +17,7 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - run: cd Backend && mvn clean test
+      - run: cd Backend && rm -rf src/main/resources/db && mvn clean test
         env:
           DB_DEV_STRING: ${{ secrets.DB_DEV_STRING }}
           DB_DEV_USERNAME: ${{ secrets.DB_DEV_USERNAME }}
