@@ -6,6 +6,7 @@ Thumbs.db
 .vscode/
 .idea/
 *.iml
+node_modules/
 /Frontend/node_modules/
 /Frontend/dist/
 /Frontend/.vite/
