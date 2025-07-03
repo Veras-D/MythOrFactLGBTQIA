@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.context.ActiveProfiles;
+import com.veras.mythOrFactLGBT.security.JwtUtil;
 
 import java.util.Collections;
 import java.util.Arrays;
@@ -44,6 +45,9 @@ class StatementControllerTest {
 
     @MockBean
     private StatementService statementService;
+
+    @MockBean
+    private JwtUtil jwtUtil;
 
     private Statement statement1;
 
