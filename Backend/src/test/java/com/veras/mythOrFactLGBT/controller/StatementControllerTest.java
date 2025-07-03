@@ -2,6 +2,7 @@ package com.veras.mythOrFactLGBT.controller;
 
 import com.veras.mythOrFactLGBT.config.SecurityConfig;
 import com.veras.mythOrFactLGBT.model.Statement;
+import com.veras.mythOrFactLGBT.security.UserDetailsServiceImpl;
 import com.veras.mythOrFactLGBT.service.StatementService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,6 +56,9 @@ class StatementControllerTest {
 
     @MockBean
     private UserDetailsService userDetailsService;
+
+    @MockBean
+    private UserDetailsServiceImpl userDetailsServiceImpl;
 
     private Statement statement1;
 
