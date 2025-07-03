@@ -38,7 +38,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 @WebMvcTest(GameHistoryController.class)
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 // @ActiveProfiles("test")
 class GameHistoryControllerTest {
 
