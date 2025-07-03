@@ -7,6 +7,21 @@ on:
     branches: [main, master]
 
 jobs:
+  backend-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+      - run: cd Backend && mvn clean test
+        env:
+          DB_DEV_STRING: ${{ secrets.DB_DEV_STRING }}
+          DB_DEV_USERNAME: ${{ secrets.DB_DEV_USERNAME }}
+          DB_DEV_PASSWORD: ${{ secrets.DB_DEV_PASSWORD }}
+          DB_DEV_DRIVER: ${{ secrets.DB_DEV_DRIVER }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
   frontend-test:
     runs-on: ubuntu-latest
 
