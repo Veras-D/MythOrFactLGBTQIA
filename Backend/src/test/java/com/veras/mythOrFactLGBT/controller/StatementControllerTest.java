@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.context.ActiveProfiles;
@@ -51,6 +52,9 @@ class StatementControllerTest {
 
     @MockBean
     private JwtUtil jwtUtil;
+
+    @MockBean
+    private UserDetailsService userDetailsService;
 
     private Statement statement1;
 
@@ -138,9 +142,7 @@ class StatementControllerTest {
         updatedDetails.setDifficulty(1);
         updatedDetails.setCategory("Physics");
 
-        // Mock finding the existing statement
         when(statementService.getStatementById(1L)).thenReturn(Optional.of(statement1));
-        // Mock saving the updated statement
         when(statementService.saveStatement(any(Statement.class))).thenAnswer(invocation -> {
             Statement s = invocation.getArgument(0);
             s.setStatement(updatedDetails.getStatement());
