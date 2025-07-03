@@ -51,7 +51,7 @@ jobs:
       - name: Install frontend dependencies
         run: |
           cd Frontend
-          npm ci
+          npm i
 
       - name: Run frontend linting
         run: |
