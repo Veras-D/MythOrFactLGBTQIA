@@ -54,6 +54,9 @@ class GameHistoryControllerTest {
     @MockBean
     private UserService userService;
 
+    @MockBean
+    private JwtUtil jwtUtil;
+
     private User testUser;
     private GameHistory gameHistory1;
     private GameHistoryResponseDto gameHistoryResponseDto;
