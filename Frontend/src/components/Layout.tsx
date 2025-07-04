@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+
 import { useAuth } from '../contexts/AuthContext';
 import AuthForm from './AuthForm';
 import LeaderboardModal from './LeaderboardModal';
+import ProfileModal from './ProfileModal';
 import { Button } from './ui/button';
-import { Trophy, User, LogOut, Play, Menu, X } from 'lucide-react';
+import { Trophy, User, LogOut, Play, Menu, X, Settings } from 'lucide-react';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -15,6 +17,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
   const { user, logout } = useAuth();
   const [showAuthForm, setShowAuthForm] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -65,6 +68,13 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
                         Best: {user.highestScore}
                       </div>
                     </div>
+                    <Button
+                      variant="ghost"
+                      onClick={() => setShowProfile(true)}
+                      className="text-gray-700 hover:bg-gray-100/50"
+                    >
+                      <Settings className="w-4 h-4" />
+                    </Button>
                     <Button
                       variant="ghost"
                       onClick={logout}
@@ -138,6 +148,17 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
                       <Button
                         variant="ghost"
                         onClick={() => {
+                          setShowProfile(true);
+                          setMobileMenuOpen(false);
+                        }}
+                        className="justify-start text-gray-700 hover:bg-gray-100/50 w-full"
+                      >
+                        <Settings className="w-4 h-4 mr-2" />
+                        Profile
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        onClick={() => {
                           logout();
                           setMobileMenuOpen(false);
                         }}
@@ -191,6 +212,18 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
         >
           <div onClick={(e) => e.stopPropagation()}>
             <LeaderboardModal onClose={() => setShowLeaderboard(false)} />
+          </div>
+        </div>
+      )}
+
+      {/* Profile Modal */}
+      {showProfile && (
+        <div
+          className="fixed inset-0 z-50 bg-black/50"
+          onClick={() => setShowProfile(false)}
+        >
+          <div onClick={(e) => e.stopPropagation()}>
+            <ProfileModal onClose={() => setShowProfile(false)} />
           </div>
         </div>
       )}
