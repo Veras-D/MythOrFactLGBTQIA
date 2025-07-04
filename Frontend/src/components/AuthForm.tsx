@@ -36,6 +36,16 @@ const AuthForm: React.FC<AuthFormProps> = ({ onClose }) => {
         setIsSubmitting(false);
         return;
       }
+      if (!/[a-zA-Z]/.test(formData.password)) {
+        toast.error('Password must contain at least one letter');
+        setIsSubmitting(false);
+        return;
+      }
+      if (!/[0-9]/.test(formData.password)) {
+        toast.error('Password must contain at least one number');
+        setIsSubmitting(false);
+        return;
+      }
     }
 
     try {
