@@ -73,4 +73,20 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/me")
+    @Operation(summary = "Delete the authenticated user's account", description = "Deletes the account of the currently authenticated user.")
+    @ApiResponse(responseCode = "204", description = "User account successfully deleted")
+    @ApiResponse(responseCode = "401", description = "Unauthorized: User not authenticated")
+    @ApiResponse(responseCode = "404", description = "User not found")
+    public ResponseEntity<Void> deleteMyAccount(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(401).build();
+        }
+        User authenticatedUser = userService.findByUsername(userDetails.getUsername())
+            .orElseThrow(() -> new RuntimeException("Authenticated user not found"));
+
+        userService.deleteUser(authenticatedUser.getId());
+        return ResponseEntity.noContent().build();
+    }
 }
