@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Statement, getRandomStatement, getDifficultyColor, getDifficultyLabel, getCategoryColor } from '../data/statements';
+import api from '../lib/api';
+import { getDifficultyColor, getDifficultyLabel, getCategoryColor } from '../lib/statementUtils';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { toast } from 'sonner';
 import { Check, X, Trophy, Star } from 'lucide-react';
 
+export interface Statement {
+  id: number;
+  statement: string;
+  explanation: string;
+  difficulty: number;
+  category: string;
+  fact: boolean;
+}
+
 const Game: React.FC = () => {
-  const { user, updateHighScore, saveGameHistory } = useAuth();
+  const { user, saveGameHistory } = useAuth();
+  const [statements, setStatements] = useState<Statement[]>([]);
   const [currentStatement, setCurrentStatement] = useState<Statement | null>(null);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
@@ -19,10 +30,20 @@ const Game: React.FC = () => {
   const [isAnswering, setIsAnswering] = useState(false);
 
   useEffect(() => {
-    startNewGame();
+    const fetchStatements = async () => {
+      try {
+        const response = await api.get('/statements');
+        setStatements(response.data);
+        startNewGame(response.data);
+      } catch (error) {
+        console.error("Failed to fetch statements:", error);
+        toast.error("Failed to load questions. Please try again later.");
+      }
+    };
+    fetchStatements();
   }, []);
 
-  const startNewGame = () => {
+  const startNewGame = (gameStatements: Statement[]) => {
     setScore(0);
     setGameOver(false);
     setShowExplanation(false);
@@ -30,18 +51,24 @@ const Game: React.FC = () => {
     setStreak(0);
     setSelectedAnswer(null);
     setIsAnswering(false);
-    loadNextStatement([]);
+    loadNextStatement([], gameStatements);
   };
 
-  const loadNextStatement = (used: number[]) => {
-    const statement = getRandomStatement(used);
+  const loadNextStatement = (used: number[], gameStatements: Statement[]) => {
+    const availableStatements = gameStatements.filter(s => !used.includes(s.id));
+    if (availableStatements.length === 0) {
+      endGame();
+      return;
+    }
+    const randomIndex = Math.floor(Math.random() * availableStatements.length);
+    const statement = availableStatements[randomIndex];
+
     if (statement) {
       setCurrentStatement(statement);
       setShowExplanation(false);
       setSelectedAnswer(null);
       setIsAnswering(false);
     } else {
-      // No more statements available
       endGame();
     }
   };
@@ -53,7 +80,7 @@ const Game: React.FC = () => {
     setSelectedAnswer(answer);
     setShowExplanation(true);
 
-    const isCorrect = answer === currentStatement.is_fact;
+    const isCorrect = answer === currentStatement.fact;
 
     if (isCorrect) {
       const points = currentStatement.difficulty * 10;
@@ -63,11 +90,10 @@ const Game: React.FC = () => {
         icon: <Trophy className="w-4 h-4 text-yellow-400" />
       });
 
-      // Continue to next question after delay
       setTimeout(() => {
         const newUsed = [...usedStatements, currentStatement.id];
         setUsedStatements(newUsed);
-        loadNextStatement(newUsed);
+        loadNextStatement(newUsed, statements);
       }, 3000);
     } else {
       toast.error('Wrong answer! Game over!', {
@@ -82,7 +108,6 @@ const Game: React.FC = () => {
   const endGame = () => {
     setGameOver(true);
     if (user) {
-      updateHighScore(score);
       saveGameHistory(score);
     }
   };
@@ -97,7 +122,7 @@ const Game: React.FC = () => {
             <div className="space-y-2">
               <p className="text-2xl text-gray-900">Final Score: <span className="text-rainbow font-bold">{score}</span></p>
               <p className="text-lg text-gray-700">Correct Answers: {usedStatements.length}</p>
-              {user && user.highest_score === score && (
+              {user && user.highestScore < score && (
                 <div className="flex items-center justify-center gap-2 text-yellow-500">
                   <Star className="w-5 h-5" />
                   <span className="font-semibold text-gray-900">New Personal Best!</span>
@@ -109,7 +134,7 @@ const Game: React.FC = () => {
 
           <div className="space-y-4">
             <Button
-              onClick={startNewGame}
+              onClick={() => startNewGame(statements)}
               className="w-full pride-gradient text-white font-semibold py-3 btn-hover"
             >
               Play Again
@@ -190,12 +215,12 @@ const Game: React.FC = () => {
           ) : (
             <div className="space-y-4">
               <div className={`p-4 rounded-lg border-2 ${
-                selectedAnswer === currentStatement.is_fact
+                selectedAnswer === currentStatement.fact
                   ? 'bg-green-100 border-green-500'
                   : 'bg-red-100 border-red-500'
               }`}>
                 <div className="flex items-center gap-2 mb-2">
-                  {selectedAnswer === currentStatement.is_fact ? (
+                  {selectedAnswer === currentStatement.fact ? (
                     <>
                       <Check className="w-6 h-6 text-green-600" />
                       <span className="text-green-700 font-bold text-lg">Correct!</span>
@@ -208,7 +233,7 @@ const Game: React.FC = () => {
                   )}
                 </div>
                 <p className="text-gray-900 font-semibold">
-                  This statement is a {currentStatement.is_fact ? 'FACT' : 'MYTH'}
+                  This statement is a {currentStatement.fact ? 'FACT' : 'MYTH'}
                 </p>
               </div>
 
@@ -219,7 +244,7 @@ const Game: React.FC = () => {
                 </p>
               </div>
 
-              {selectedAnswer === currentStatement.is_fact && (
+              {selectedAnswer === currentStatement.fact && (
                 <div className="text-center">
                   <p className="text-yellow-600 font-semibold">
                     +{currentStatement.difficulty * 10} points earned!

@@ -103,7 +103,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const updateHighScore = async (score: number) => {
     if (user && score > user.highestScore) {
-      // API call to update high score
     }
   };
 
