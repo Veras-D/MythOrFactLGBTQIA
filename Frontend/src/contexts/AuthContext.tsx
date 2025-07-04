@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import api from '../lib/api';
+import { jwtDecode } from 'jwt-decode';
 
 export interface User {
   id: number;
@@ -18,13 +20,13 @@ export interface GameHistory {
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (username: string, password: string) => Promise<boolean>;
   register: (username: string, email: string, password: string) => Promise<boolean>;
   logout: () => void;
-  updateHighScore: (score: number) => void;
-  saveGameHistory: (score: number) => void;
-  getLeaderboard: () => User[];
-  getGameHistory: () => GameHistory[];
+  updateHighScore: (score: number) => Promise<void>;
+  saveGameHistory: (score: number) => Promise<void>;
+  getLeaderboard: () => Promise<User[]>;
+  getGameHistory: () => Promise<GameHistory[]>;
   isLoading: boolean;
   error: string | null;
 }
@@ -44,61 +46,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Mock data storage (simulating database)
-  const [users, setUsers] = useState<User[]>(() => {
-    const savedUsers = localStorage.getItem('lgbtmythorfact_users');
-    return savedUsers ? JSON.parse(savedUsers) : [];
-  });
-
-  const [gameHistory, setGameHistory] = useState<GameHistory[]>(() => {
-    const savedHistory = localStorage.getItem('lgbtmythorfact_history');
-    return savedHistory ? JSON.parse(savedHistory) : [];
-  });
-
   useEffect(() => {
-    // Check if user is already logged in
-    const savedUser = localStorage.getItem('lgbtmythorfact_user');
-    if (savedUser) {
-      const userData = JSON.parse(savedUser);
-      // Find the latest user data
-      const currentUser = users.find(u => u.id === userData.id);
-      setUser(currentUser || userData);
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken: any = jwtDecode(token);
+      if (decodedToken.exp * 1000 > Date.now()) {
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        api.get(`/users/${decodedToken.id}`).then(response => {
+          setUser(response.data);
+        });
+      } else {
+        logout();
+      }
     }
     setIsLoading(false);
-  }, [users]);
+  }, []);
 
-  useEffect(() => {
-    localStorage.setItem('lgbtmythorfact_users', JSON.stringify(users));
-  }, [users]);
-
-  useEffect(() => {
-    localStorage.setItem('lgbtmythorfact_history', JSON.stringify(gameHistory));
-  }, [gameHistory]);
-
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (username: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     setError(null);
-
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      const foundUser = users.find(u => u.email === email);
-      if (!foundUser) {
-        setError('User not found');
-        return false;
-      }
-
-      if (foundUser.email === email) {
-        setUser(foundUser);
-        localStorage.setItem('lgbtmythorfact_user', JSON.stringify(foundUser));
-        return true;
-      } else {
-        setError('Invalid credentials');
-        return false;
-      }
-    } catch (err) {
-      setError('Login failed');
+      const response = await api.post('/auth/login', { username, password });
+      const { token, userId } = response.data;
+      localStorage.setItem('token', token);
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      const userResponse = await api.get(`/users/${userId}`);
+      setUser(userResponse.data);
+      return true;
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Login failed');
       return false;
     } finally {
       setIsLoading(false);
@@ -108,36 +84,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const register = async (username: string, email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     setError(null);
-
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Check if user already exists
-      if (users.some(u => u.email === email)) {
-        setError('User with this email already exists');
-        return false;
-      }
-
-      if (users.some(u => u.username === username)) {
-        setError('Username already taken');
-        return false;
-      }
-
-      const newUser: User = {
-        id: Date.now(), // Simple ID generation for demo
-        username,
-        email,
-        highest_score: 0,
-        created_at: new Date().toISOString()
-      };
-
-      setUsers(prev => [...prev, newUser]);
-      setUser(newUser);
-      localStorage.setItem('lgbtmythorfact_user', JSON.stringify(newUser));
-      return true;
-    } catch (err) {
-      setError('Registration failed');
+      await api.post('/auth/register', { username, email, password });
+      return await login(username, password);
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Registration failed');
       return false;
     } finally {
       setIsLoading(false);
@@ -146,45 +97,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('lgbtmythorfact_user');
+    localStorage.removeItem('token');
+    delete api.defaults.headers.common['Authorization'];
   };
 
-  const updateHighScore = (score: number) => {
+  const updateHighScore = async (score: number) => {
     if (user && score > user.highest_score) {
-      const updatedUser = { ...user, highest_score: score };
-      setUser(updatedUser);
-      setUsers(prev => prev.map(u => u.id === user.id ? updatedUser : u));
-      localStorage.setItem('lgbtmythorfact_user', JSON.stringify(updatedUser));
+      // API call to update high score
     }
   };
 
-  const saveGameHistory = (score: number) => {
+  const saveGameHistory = async (score: number) => {
     if (user) {
-      const newGame: GameHistory = {
-        id: Date.now(),
-        user_id: user.id,
-        score,
-        played_at: new Date().toISOString(),
-        username: user.username
-      };
-      setGameHistory(prev => [...prev, newGame]);
+      // API call to save game history
     }
   };
 
-  const getLeaderboard = (): User[] => {
-    return [...users]
-      .sort((a, b) => b.highest_score - a.highest_score)
-      .slice(0, 10);
+  const getLeaderboard = async (): Promise<User[]> => {
+    // API call to get leaderboard
+    return [];
   };
 
-  const getGameHistory = (): GameHistory[] => {
-    return gameHistory
-      .map(game => ({
-        ...game,
-        username: users.find(u => u.id === game.user_id)?.username || 'Unknown'
-      }))
-      .sort((a, b) => new Date(b.played_at).getTime() - new Date(a.played_at).getTime())
-      .slice(0, 20);
+  const getGameHistory = async (): Promise<GameHistory[]> => {
+    // API call to get game history
+    return [];
   };
 
   const value = {
