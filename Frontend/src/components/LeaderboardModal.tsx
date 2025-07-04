@@ -78,7 +78,7 @@ const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ onClose }) => {
                   <div className="text-sm text-gray-600 mb-1">Your Position</div>
                   <div className="text-2xl font-bold text-blue-600">#{userRank}</div>
                   <div className="text-sm text-gray-600">
-                    Score: {user.highest_score} points
+                    Score: {user.highestScore} points
                   </div>
                 </div>
               </div>
@@ -109,12 +109,12 @@ const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ onClose }) => {
                       )}
                     </div>
                     <div className="text-gray-500 text-sm">
-                      Joined {formatDate(player.created_at)}
+                      Joined {formatDate(player.createdAt)}
                     </div>
                   </div>
                   <div className="flex-shrink-0 text-right">
                     <div className="text-2xl font-bold text-rainbow">
-                      {player.highest_score}
+                      {player.highestScore}
                     </div>
                     <div className="text-gray-500 text-xs">
                       points

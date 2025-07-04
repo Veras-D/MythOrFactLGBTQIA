@@ -103,12 +103,12 @@ const Leaderboard: React.FC = () => {
                       )}
                     </div>
                     <div className="text-gray-500 text-sm">
-                      Joined {formatDate(player.created_at)}
+                      Joined {formatDate(player.createdAt)}
                     </div>
                   </div>
                   <div className="flex-shrink-0 text-right">
                     <div className="text-2xl font-bold text-rainbow">
-                      {player.highest_score}
+                      {player.highestScore}
                     </div>
                     <div className="text-gray-500 text-xs">
                       points
@@ -155,7 +155,7 @@ const Leaderboard: React.FC = () => {
                       )}
                     </div>
                     <div className="text-gray-500 text-sm">
-                      {formatDate(game.played_at)}
+                      {formatDate(game.playedAt)}
                     </div>
                   </div>
                   <div className="text-right">
@@ -186,7 +186,7 @@ const Leaderboard: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center">
                 <div className="text-3xl font-bold text-rainbow mb-2">
-                  {user.highest_score}
+                  {user.highestScore}
                 </div>
                 <div className="text-gray-600">Personal Best</div>
               </div>

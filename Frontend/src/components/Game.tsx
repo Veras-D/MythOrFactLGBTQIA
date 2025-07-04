@@ -146,7 +146,7 @@ const Game: React.FC = () => {
               {user && (
                 <div>
                   <span className="text-lg font-semibold">Best: </span>
-                  <span className="text-2xl font-bold text-green-600">{user.highest_score}</span>
+                  <span className="text-2xl font-bold text-green-600">{user.highestScore}</span>
                 </div>
               )}
             </div>
