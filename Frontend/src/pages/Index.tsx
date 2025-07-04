@@ -10,7 +10,7 @@ const Index = () => {
   return (
     <AuthProvider>
       <Layout currentPage={currentPage} onPageChange={setCurrentPage}>
-        {currentPage === 'game' ? <Game /> : <Leaderboard />}
+        <Game />
       </Layout>
     </AuthProvider>
   );
