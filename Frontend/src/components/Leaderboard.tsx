@@ -1,13 +1,34 @@
-import React from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import React, { useState, useEffect } from 'react';
+import { useAuth, User, GameHistory } from '../contexts/AuthContext';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Trophy, Medal, Award, Clock } from 'lucide-react';
 
 const Leaderboard: React.FC = () => {
   const { getLeaderboard, getGameHistory, user } = useAuth();
-  const leaderboard = getLeaderboard();
-  const recentGames = getGameHistory();
+  const [leaderboard, setLeaderboard] = useState<User[]>([]);
+  const [recentGames, setRecentGames] = useState<GameHistory[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const [leaderboardData, historyData] = await Promise.all([
+          getLeaderboard(),
+          getGameHistory(),
+        ]);
+        setLeaderboard(leaderboardData);
+        setRecentGames(historyData);
+      } catch (error) {
+        console.error("Failed to fetch leaderboard data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [getLeaderboard, getGameHistory]);
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
@@ -30,6 +51,14 @@ const Leaderboard: React.FC = () => {
       minute: '2-digit'
     });
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen light-bg flex items-center justify-center">
+        <div className="text-gray-900 text-xl">Loading Leaderboard...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen light-bg p-4">
