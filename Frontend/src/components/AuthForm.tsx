@@ -25,10 +25,17 @@ const AuthForm: React.FC<AuthFormProps> = ({ onClose }) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    if (!isLogin && formData.password !== formData.confirmPassword) {
-      toast.error('Passwords do not match');
-      setIsSubmitting(false);
-      return;
+    if (!isLogin) {
+      if (formData.password !== formData.confirmPassword) {
+        toast.error('Passwords do not match');
+        setIsSubmitting(false);
+        return;
+      }
+      if (formData.password.length < 8) {
+        toast.error('Password must be at least 8 characters long');
+        setIsSubmitting(false);
+        return;
+      }
     }
 
     try {
