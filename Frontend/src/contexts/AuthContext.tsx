@@ -6,15 +6,15 @@ export interface User {
   id: number;
   username: string;
   email: string;
-  highest_score: number;
-  created_at: string;
+  highestScore: number;
+  createdAt: string;
 }
 
 export interface GameHistory {
   id: number;
   user_id: number;
   score: number;
-  played_at: string;
+  playedAt: string;
   username?: string;
 }
 
@@ -52,7 +52,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const decodedToken: any = jwtDecode(token);
       if (decodedToken.exp * 1000 > Date.now()) {
         api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        api.get(`/users/${decodedToken.id}`).then(response => {
+        api.get('/users/me').then(response => {
           setUser(response.data);
         });
       } else {
@@ -102,25 +102,41 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const updateHighScore = async (score: number) => {
-    if (user && score > user.highest_score) {
+    if (user && score > user.highestScore) {
       // API call to update high score
     }
   };
 
   const saveGameHistory = async (score: number) => {
     if (user) {
-      // API call to save game history
+      try {
+        await api.post('/gamehistory', { score });
+        const userResponse = await api.get('/users/me');
+        setUser(userResponse.data);
+      } catch (err) {
+        console.error("Failed to save game history:", err);
+      }
     }
   };
 
   const getLeaderboard = async (): Promise<User[]> => {
-    // API call to get leaderboard
-    return [];
+    try {
+      const response = await api.get('/users/leaderboard');
+      return response.data;
+    } catch (err) {
+      console.error("Failed to fetch leaderboard:", err);
+      return [];
+    }
   };
 
   const getGameHistory = async (): Promise<GameHistory[]> => {
-    // API call to get game history
-    return [];
+    try {
+      const response = await api.get('/gamehistory/user/me');
+      return response.data;
+    } catch (err) {
+      console.error("Failed to fetch game history:", err);
+      return [];
+    }
   };
 
   const value = {
