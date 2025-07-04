@@ -72,20 +72,20 @@ const AuthForm: React.FC<AuthFormProps> = ({ onClose }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-semibold text-gray-800 mb-2">
-              Username
-            </label>
-            <Input
-              name="username"
-              type="text"
-              placeholder="Enter your username"
-              value={formData.username}
-              onChange={handleInputChange}
-              required
-              className="glass border-gray-300 text-gray-900 placeholder-gray-500 focus:border-blue-500"
-            />
-          </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
+                Username
+              </label>
+              <Input
+                name="username"
+                type="text"
+                placeholder="Enter your username"
+                value={formData.username}
+                onChange={handleInputChange}
+                required
+                className="glass border-gray-300 text-gray-900 placeholder-gray-500 focus:border-blue-500"
+              />
+            </div>
 
           {!isLogin && (
             <div>
