@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Trophy, Medal, Award, X } from 'lucide-react';
-import { User } from '../contexts/AuthContext';
 
 interface LeaderboardModalProps {
   onClose: () => void;
@@ -11,18 +10,7 @@ interface LeaderboardModalProps {
 
 const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ onClose }) => {
   const { getLeaderboard, user } = useAuth();
-  const [leaderboard, setLeaderboard] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchLeaderboardData = async () => {
-      setLoading(true);
-      const data = await getLeaderboard();
-      setLeaderboard(data);
-      setLoading(false);
-    };
-    fetchLeaderboardData();
-  }, [getLeaderboard]);
+  const leaderboard = getLeaderboard();
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
@@ -45,7 +33,7 @@ const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ onClose }) => {
     });
   };
 
-  const userRank = user ? leaderboard.findIndex(p => p.id === user.id) + 1 : -1;
+  const userRank = leaderboard.findIndex(p => p.id === user?.id) + 1;
 
   return (
     <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50">
@@ -63,72 +51,64 @@ const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ onClose }) => {
           </button>
         </div>
 
-        {loading ? (
-          <div className="text-center py-8 text-gray-500">
-            Loading Leaderboard...
+        {user && userRank > 0 && (
+          <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <div className="text-center">
+              <div className="text-sm text-gray-600 mb-1">Your Position</div>
+              <div className="text-2xl font-bold text-blue-600">#{userRank}</div>
+              <div className="text-sm text-gray-600">
+                Score: {user.highest_score} points
+              </div>
+            </div>
           </div>
-        ) : (
-          <>
-            {user && userRank > 0 && (
-              <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <div className="text-center">
-                  <div className="text-sm text-gray-600 mb-1">Your Position</div>
-                  <div className="text-2xl font-bold text-blue-600">#{userRank}</div>
-                  <div className="text-sm text-gray-600">
-                    Score: {user.highestScore} points
-                  </div>
+        )}
+
+        <div className="space-y-3">
+          {leaderboard.map((player, index) => (
+            <div
+              key={player.id}
+              className={`flex items-center gap-4 p-4 rounded-lg transition-all ${
+                user?.id === player.id
+                  ? 'bg-blue-50 border-2 border-blue-300'
+                  : 'bg-gray-50/70 hover:bg-gray-100/70'
+              }`}
+            >
+              <div className="flex-shrink-0">
+                {getRankIcon(index + 1)}
+              </div>
+              <div className="flex-grow">
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-900 font-semibold text-lg">
+                    {player.username}
+                  </span>
+                  {user?.id === player.id && (
+                    <Badge className="bg-blue-100 text-blue-700 text-xs">
+                      You
+                    </Badge>
+                  )}
+                </div>
+                <div className="text-gray-500 text-sm">
+                  Joined {formatDate(player.created_at)}
                 </div>
               </div>
-            )}
-
-            <div className="space-y-3">
-              {leaderboard.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
-                  <Trophy className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <p>No scores yet! Be the first to play!</p>
+              <div className="flex-shrink-0 text-right">
+                <div className="text-2xl font-bold text-rainbow">
+                  {player.highest_score}
                 </div>
-              ) : (
-                leaderboard.map((player, index) => (
-                  <div
-                    key={player.id}
-                    className={`flex items-center gap-4 p-4 rounded-lg transition-all ${
-                      user?.id === player.id
-                        ? 'bg-blue-50 border-2 border-blue-300'
-                        : 'bg-gray-50/70 hover:bg-gray-100/70'
-                    }`}
-                  >
-                    <div className="flex-shrink-0">
-                      {getRankIcon(index + 1)}
-                    </div>
-                    <div className="flex-grow">
-                      <div className="flex items-center gap-2">
-                        <span className="text-gray-900 font-semibold text-lg">
-                          {player.username}
-                        </span>
-                        {user?.id === player.id && (
-                          <Badge className="bg-blue-100 text-blue-700 text-xs">
-                            You
-                          </Badge>
-                        )}
-                      </div>
-                      <div className="text-gray-500 text-sm">
-                        Joined {formatDate(player.createdAt)}
-                      </div>
-                    </div>
-                    <div className="flex-shrink-0 text-right">
-                      <div className="text-2xl font-bold text-rainbow">
-                        {player.highestScore}
-                      </div>
-                      <div className="text-gray-500 text-xs">
-                        points
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
+                <div className="text-gray-500 text-xs">
+                  points
+                </div>
+              </div>
             </div>
-          </>
-        )}
+          ))}
+
+          {leaderboard.length === 0 && (
+            <div className="text-center py-8 text-gray-500">
+              <Trophy className="w-12 h-12 mx-auto mb-4 opacity-50" />
+              <p>No scores yet! Be the first to play!</p>
+            </div>
+          )}
+        </div>
       </Card>
     </div>
   );

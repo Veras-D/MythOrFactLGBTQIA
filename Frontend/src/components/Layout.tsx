@@ -62,7 +62,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
                         {user.username}
                       </div>
                       <div className="text-gray-600 text-sm">
-                        Best: {user.highestScore}
+                        Best: {user.highest_score}
                       </div>
                     </div>
                     <Button
