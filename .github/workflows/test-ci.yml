@@ -36,7 +36,9 @@ jobs:
 
   frontend-test:
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: ./Frontend
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -46,19 +48,13 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: Frontend/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Install frontend dependencies
-        run: |
-          cd Frontend
-          npm i
+        run: npm i
 
       - name: Run frontend linting
-        run: |
-          cd Frontend
-          npm run lint
+        run: npm run lint
 
       - name: Build frontend
-        run: |
-          cd Frontend
-          npm run build
+        run: npm run build
