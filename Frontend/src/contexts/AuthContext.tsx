@@ -8,6 +8,7 @@ export interface User {
   email: string;
   highestScore: number;
   createdAt: string;
+  role: string;
 }
 
 export interface GameHistory {
@@ -47,19 +48,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      const decodedToken: any = jwtDecode(token);
-      if (decodedToken.exp * 1000 > Date.now()) {
-        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        api.get('/users/me').then(response => {
-          setUser(response.data);
-        });
-      } else {
-        logout();
+    const checkUser = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const decodedToken: any = jwtDecode(token);
+          if (decodedToken.exp * 1000 > Date.now()) {
+            api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            const response = await api.get('/users/me');
+            setUser(response.data);
+          } else {
+            logout();
+          }
+        } catch (error) {
+          console.error("Failed to decode token or fetch user", error);
+          logout();
+        }
       }
-    }
-    setIsLoading(false);
+      setIsLoading(false);
+    };
+
+    checkUser();
   }, []);
 
   const login = async (username: string, password: string): Promise<boolean> => {
@@ -67,10 +76,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setError(null);
     try {
       const response = await api.post('/auth/login', { username, password });
-      const { token, userId } = response.data;
+      const { token } = response.data;
       localStorage.setItem('token', token);
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      const userResponse = await api.get(`/users/${userId}`);
+      const userResponse = await api.get(`/users/me`);
       setUser(userResponse.data);
       return true;
     } catch (err: any) {

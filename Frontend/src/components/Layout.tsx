@@ -134,6 +134,18 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage, onPageChange }) 
                     <Trophy className="w-4 h-4 mr-2" />
                     Leaderboard
                   </Button>
+                  {user && user.role === 'ADMIN' && (
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        window.location.href = '/admin/statements';
+                      }}
+                      className="text-gray-700 hover:bg-gray-100/50 font-medium"
+                    >
+                      <Settings className="w-4 h-4 mr-2" />
+                      Admin
+                    </Button>
+                  )}
 
                   {user ? (
                     <div className="pt-3 border-t border-gray-200/50">
