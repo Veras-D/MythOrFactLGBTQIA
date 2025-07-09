@@ -40,6 +40,15 @@ public class User {
     @Column(name = "role")
     private String role;
 
+    @Column(name = "email_verified", columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean emailVerified = false;
+
+    @Column(name = "confirmation_token")
+    private String confirmationToken;
+
+    @Column(name = "token_creation_date")
+    private Timestamp tokenCreationDate;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<GameHistory> gameHistories;
 }
