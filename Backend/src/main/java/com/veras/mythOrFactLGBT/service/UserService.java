@@ -13,4 +13,6 @@ public interface UserService {
     List<UserResponse> getGlobalLeaderboard();
     void deleteUser(Long id);
     boolean confirmUser(String token);
+    String generatePasswordResetToken(String email);
+    boolean resetPassword(String token, String newPassword);
 }

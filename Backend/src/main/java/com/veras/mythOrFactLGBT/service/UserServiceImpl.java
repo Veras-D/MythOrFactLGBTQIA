@@ -112,4 +112,34 @@ public class UserServiceImpl implements UserService {
 
         return true;
     }
+
+    @Transactional
+    @Override
+    public String generatePasswordResetToken(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with email: " + email));
+
+        String token = UUID.randomUUID().toString();
+        user.setResetPasswordToken(token);
+        user.setResetPasswordTokenExpiry(Timestamp.valueOf(LocalDateTime.now().plusHours(1)));
+        userRepository.save(user);
+        return token;
+    }
+
+    @Transactional
+    @Override
+    public boolean resetPassword(String token, String newPassword) {
+        User user = userRepository.findByResetPasswordToken(token)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid or expired password reset token."));
+
+        if (user.getResetPasswordTokenExpiry().before(Timestamp.valueOf(LocalDateTime.now()))) {
+            throw new IllegalArgumentException("Password reset token has expired.");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setResetPasswordToken(null);
+        user.setResetPasswordTokenExpiry(null);
+        userRepository.save(user);
+        return true;
+    }
 }

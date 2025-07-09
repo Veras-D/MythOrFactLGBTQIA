@@ -15,4 +15,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Boolean existsByEmail(String email);
     List<User> findTop10ByOrderByHighestScoreDesc();
     Optional<User> findByConfirmationToken(String token);
+    Optional<User> findByResetPasswordToken(String token);
 }
