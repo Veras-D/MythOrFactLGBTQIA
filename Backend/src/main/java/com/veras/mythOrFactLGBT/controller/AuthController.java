@@ -22,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -93,12 +94,152 @@ public class AuthController {
                      content = @Content(mediaType = "text/plain"))
     })
     @GetMapping("/confirm")
-    public ResponseEntity<?> confirmEmail(@RequestParam("token") String token) {
+    public ResponseEntity<String> confirmEmail(@RequestParam("token") String token) {
         boolean isConfirmed = userService.confirmUser(token);
+
         if (isConfirmed) {
-            return ResponseEntity.ok("Email confirmed successfully!");
+            String successHtml = """
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Email Confirmed Successfully</title>
+        <style>
+          body {
+            background-color: #fff8f9;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            text-align: center;
+            padding: 2rem;
+            margin: 0;
+          }
+          .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            max-width: 500px;
+            margin: 0 auto;
+          }
+          .success-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+          }
+          .highlight {
+            font-weight: bold;
+            color: #00c37a;
+          }
+          a.button {
+            display: inline-block;
+            background-color: #00c37a;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 1.5rem;
+            transition: background-color 0.3s;
+          }
+          a.button:hover {
+            background-color: #00a265;
+          }
+          .footer {
+            font-size: 0.9rem;
+            margin-top: 2rem;
+            color: #999;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="card">
+          <div class="success-icon">✅</div>
+          <h2>🌈 Email Confirmed Successfully!</h2>
+          <p>
+            Welcome to our colorful world of
+            <span class="highlight">truths and fun facts</span> 🌟
+          </p>
+          <p>Your email has been verified and your account is now active.</p>
+          <a href="https://myth-or-fact-lgbtqia.vercel.app/" class="button">🚀 Start Exploring</a>
+        </div>
+        <p class="footer">
+          Thank you for joining our community! 🏳️‍🌈
+        </p>
+      </body>
+    </html>
+    """;
+            return ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(successHtml);
         } else {
-            return ResponseEntity.badRequest().body("Invalid or expired confirmation token.");
+            String errorHtml = """
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Email Confirmation Failed</title>
+        <style>
+          body {
+            background-color: #fff8f9;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            text-align: center;
+            padding: 2rem;
+            margin: 0;
+          }
+          .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            max-width: 500px;
+            margin: 0 auto;
+          }
+          .error-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+          }
+          .error-text {
+            font-weight: bold;
+            color: #e74c3c;
+          }
+          a.button {
+            display: inline-block;
+            background-color: #00c37a;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 1.5rem;
+            transition: background-color 0.3s;
+          }
+          a.button:hover {
+            background-color: #00a265;
+          }
+          .footer {
+            font-size: 0.9rem;
+            margin-top: 2rem;
+            color: #999;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="card">
+          <div class="error-icon">❌</div>
+          <h2>🌈 Email Confirmation Failed</h2>
+          <p class="error-text">
+            Invalid or expired confirmation token.
+          </p>
+          <p>Please try signing up again or contact support if the issue persists.</p>
+          <a href="https://myth-or-fact-lgbtqia.vercel.app/" class="button">🏠 Go to Home</a>
+        </div>
+        <p class="footer">
+          Need help? Contact our support team! 💪
+        </p>
+      </body>
+    </html>
+    """;
+            return ResponseEntity.badRequest().contentType(MediaType.TEXT_HTML).body(errorHtml);
         }
     }
 }
