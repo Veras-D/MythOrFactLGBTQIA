@@ -102,6 +102,7 @@ class AuthControllerTest {
         User appUser = new User();
         appUser.setId(1L);
         appUser.setUsername("testuser");
+        appUser.setEmailVerified(true);
         when(userService.findByUsername("testuser")).thenReturn(Optional.of(appUser));
 
         when(jwtUtil.generateToken(authentication)).thenReturn("mocked.jwt.token");

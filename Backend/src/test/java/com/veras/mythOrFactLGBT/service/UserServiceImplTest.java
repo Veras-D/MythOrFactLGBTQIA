@@ -25,6 +25,9 @@ class UserServiceImplTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private EmailService emailService;
+
     @InjectMocks
     private UserServiceImpl userService;
 
@@ -41,7 +44,6 @@ class UserServiceImplTest {
     @Test
     void registerUser_success() {
         when(userRepository.existsByUsername(user.getUsername())).thenReturn(false);
-        when(userRepository.existsByEmail(user.getEmail())).thenReturn(false);
         when(passwordEncoder.encode(user.getPassword())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
             User savedUser = invocation.getArgument(0);
@@ -56,6 +58,7 @@ class UserServiceImplTest {
         assertEquals(1L, registeredUser.getId());
         assertEquals("USER", registeredUser.getRole());
         verify(userRepository).save(user);
+        verify(emailService).sendConfirmationEmail(user.getEmail(), user.getConfirmationToken());
     }
 
     @Test
