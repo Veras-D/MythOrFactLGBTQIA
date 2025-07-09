@@ -78,6 +78,27 @@ public class AuthController {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User user = userService.findByUsername(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User not found after authentication"));
 
+        if (!user.isEmailVerified()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please confirm your email before logging in.");
+        }
+
         return ResponseEntity.ok(new AuthResponse(jwt, user.getId(), user.getUsername()));
+    }
+
+    @Operation(summary = "Confirm user's email address")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Email confirmed successfully",
+                     content = @Content(mediaType = "text/plain")),
+        @ApiResponse(responseCode = "400", description = "Invalid or expired token",
+                     content = @Content(mediaType = "text/plain"))
+    })
+    @GetMapping("/confirm")
+    public ResponseEntity<?> confirmEmail(@RequestParam("token") String token) {
+        boolean isConfirmed = userService.confirmUser(token);
+        if (isConfirmed) {
+            return ResponseEntity.ok("Email confirmed successfully!");
+        } else {
+            return ResponseEntity.badRequest().body("Invalid or expired confirmation token.");
+        }
     }
 }
