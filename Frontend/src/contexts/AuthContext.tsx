@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import api from '../lib/api';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 
+import { confirmEmail as confirmEmailApi } from '../lib/api';
+
 export interface User {
   id: number;
   username: string;
@@ -21,9 +23,10 @@ export interface GameHistory {
 
 interface AuthContextType {
   user: User | null;
-  login: (username: string, password: string) => Promise<boolean>;
+  login: (username: string, password: string) => Promise<boolean | string>;
   register: (username: string, email: string, password: string) => Promise<boolean>;
   logout: () => void;
+  confirmEmail: (token: string) => Promise<boolean>;
   updateHighScore: (score: number) => Promise<void>;
   saveGameHistory: (score: number) => Promise<void>;
   getLeaderboard: () => Promise<User[]>;
@@ -82,9 +85,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(userResponse.data);
       return true;
     } catch (err: unknown) {
-      const error = err as { response?: { data?: { message?: string } } };
-      setError(error.response?.data?.message || 'Login failed');
-      return false;
+      const error = err as { response?: { data?: string | { message?: string } } };
+      let errorMessage = 'Login failed';
+      if (error.response?.data) {
+        if (typeof error.response.data === 'string') {
+          errorMessage = error.response.data;
+        } else if (typeof error.response.data === 'object' && error.response.data.message) {
+          errorMessage = error.response.data.message;
+        }
+      }
+      setError(errorMessage);
+      return errorMessage;
     } finally {
       setIsLoading(false);
     }
@@ -95,10 +106,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setError(null);
     try {
       await api.post('/auth/register', { username, email, password });
-      return await login(username, password);
+      return true;
     } catch (err: unknown) {
-      const error = err as { response?: { data?: { message?: string } } };
-      setError(error.response?.data?.message || 'Registration failed');
+      const error = err as { response?: { data?: { message?: string, error?: string } } };
+      const errorMessage = error.response?.data?.message || error.response?.data?.error || 'Registration failed';
+      setError(errorMessage);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const confirmEmail = async (token: string): Promise<boolean> => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      await confirmEmailApi(token);
+      return true;
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string, error?: string } } };
+      const errorMessage = error.response?.data?.message || error.response?.data?.error || 'Email confirmation failed';
+      setError(errorMessage);
       return false;
     } finally {
       setIsLoading(false);
@@ -151,6 +179,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     login,
     register,
     logout,
+    confirmEmail,
     updateHighScore,
     saveGameHistory,
     getLeaderboard,
