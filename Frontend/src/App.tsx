@@ -10,6 +10,8 @@ import AdminRoute from "./components/AdminRoute";
 import StatementManagement from "./pages/StatementManagement";
 import NotFound from "./pages/NotFound";
 import EmailConfirmationPage from "./pages/EmailConfirmationPage";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +28,8 @@ const App = () => (
               <Route path="statements" element={<StatementManagement />} />
             </Route>
             <Route path="/confirm-email" element={<EmailConfirmationPage />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
