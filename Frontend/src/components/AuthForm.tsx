@@ -4,6 +4,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card } from './ui/card';
 import { toast } from 'sonner';
+import { Mail, ArrowLeft } from 'lucide-react';
 
 interface AuthFormProps {
   onClose?: () => void;
@@ -11,6 +12,7 @@ interface AuthFormProps {
 
 const AuthForm: React.FC<AuthFormProps> = ({ onClose }) => {
   const [isLogin, setIsLogin] = useState(true);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -50,17 +52,23 @@ const AuthForm: React.FC<AuthFormProps> = ({ onClose }) => {
 
     try {
       let success = false;
+      let loginResult: boolean | string = false;
       if (isLogin) {
-        success = await login(formData.username, formData.password);
+        loginResult = await login(formData.username, formData.password);
+        success = typeof loginResult === 'boolean' ? loginResult : false;
       } else {
         success = await register(formData.username, formData.email, formData.password);
       }
 
       if (success) {
-        toast.success(isLogin ? 'Welcome back!' : 'Account created successfully!');
-        onClose?.();
+        if (isLogin) {
+          toast.success('Welcome back!');
+          onClose?.();
+        } else {
+          setShowConfirmation(true);
+        }
       } else {
-        toast.error(error || 'Authentication failed');
+        toast.error(typeof loginResult === 'string' ? loginResult : (error || 'Authentication failed'));
       }
     } catch (err) {
       toast.error('An error occurred');
@@ -75,6 +83,53 @@ const AuthForm: React.FC<AuthFormProps> = ({ onClose }) => {
       [e.target.name]: e.target.value
     }));
   };
+
+  if (showConfirmation) {
+    return (
+      <div 
+        className="fixed inset-0 z-50 flex items-center justify-center light-bg bg-black/50"
+        onClick={onClose}
+      >
+        <Card 
+          className="w-full max-w-md glass-card border-0 p-8 text-center mx-4"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="mb-6">
+            <Mail className="w-16 h-16 text-blue-500 mx-auto mb-4 float" />
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Confirm your Email
+            </h2>
+            <p className="text-gray-700">
+              We sent a confirmation link to:
+            </p>
+            <p className="text-blue-600 font-semibold mt-2 break-all">
+              {formData.email}
+            </p>
+          </div>
+
+          <div className="space-y-4 text-gray-600">
+            <p className="text-sm">
+              Click the link in the email to confirm your account and log in.
+            </p>
+            <p className="text-sm">
+              Didn't receive the email? Check your spam folder.
+            </p>
+          </div>
+
+          <div className="mt-6">
+            <Button
+              onClick={onClose}
+              variant="outline"
+              className="w-full font-semibold hover:bg-gray-50"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Login
+            </Button>
+          </div>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50">
