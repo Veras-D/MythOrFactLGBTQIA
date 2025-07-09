@@ -37,9 +37,17 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new IllegalArgumentException("Username already exists");
         }
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new IllegalArgumentException("Email already exists");
+
+        Optional<User> existingUserByEmail = userRepository.findByEmail(user.getEmail());
+        if (existingUserByEmail.isPresent()) {
+            User existingUser = existingUserByEmail.get();
+            if (existingUser.isEmailVerified()) {
+                throw new IllegalArgumentException("Email already registered. Please log in.");
+            } else {
+                throw new IllegalArgumentException("This email is already registered but not confirmed. Please check your email for the confirmation link.");
+            }
         }
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole("USER");
         user.setConfirmationToken(UUID.randomUUID().toString());
