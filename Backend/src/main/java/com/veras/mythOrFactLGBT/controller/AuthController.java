@@ -23,6 +23,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
+import com.veras.mythOrFactLGBT.dto.ForgotPasswordRequest;
+import com.veras.mythOrFactLGBT.dto.ResetPasswordRequest;
+import com.veras.mythOrFactLGBT.service.EmailService;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -32,12 +35,14 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final JwtUtil jwtUtil;
+    private final EmailService emailService;
 
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager, UserService userService, JwtUtil jwtUtil) {
+    public AuthController(AuthenticationManager authenticationManager, UserService userService, JwtUtil jwtUtil, EmailService emailService) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
         this.jwtUtil = jwtUtil;
+        this.emailService = emailService;
     }
 
     @Operation(summary = "Register a new user")
@@ -240,6 +245,43 @@ public class AuthController {
     </html>
     """;
             return ResponseEntity.badRequest().contentType(MediaType.TEXT_HTML).body(errorHtml);
+        }
+    }
+
+    @Operation(summary = "Request a password reset link")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "If an account exists, a password reset link has been sent to your email.",
+                     content = @Content(mediaType = "text/plain")),
+        @ApiResponse(responseCode = "400", description = "Invalid email format",
+                     content = @Content(mediaType = "text/plain"))
+    })
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        try {
+            String resetToken = userService.generatePasswordResetToken(request.getEmail());
+            emailService.sendPasswordResetEmail(request.getEmail(), resetToken);
+            return ResponseEntity.ok("If an account with that email exists, a password reset link has been sent.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.ok("If an account with that email exists, a password reset link has been sent.");
+        } catch (Exception e) {
+            return ResponseEntity.ok("If an account with that email exists, a password reset link has been sent.");
+        }
+    }
+
+    @Operation(summary = "Reset user password using a token")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Password has been reset successfully.",
+                     content = @Content(mediaType = "text/plain")),
+        @ApiResponse(responseCode = "400", description = "Invalid or expired token, or invalid password",
+                     content = @Content(mediaType = "text/plain"))
+    })
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        try {
+            userService.resetPassword(request.getToken(), request.getNewPassword());
+            return ResponseEntity.ok("Password has been reset successfully.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }
