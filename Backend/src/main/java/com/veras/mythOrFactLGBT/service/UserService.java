@@ -12,4 +12,5 @@ public interface UserService {
     Optional<User> findById(Long id);
     List<UserResponse> getGlobalLeaderboard();
     void deleteUser(Long id);
+    boolean confirmUser(String token);
 }
