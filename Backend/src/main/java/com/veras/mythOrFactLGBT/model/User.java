@@ -49,6 +49,12 @@ public class User {
     @Column(name = "token_creation_date")
     private Timestamp tokenCreationDate;
 
+    @Column(name = "reset_password_token")
+    private String resetPasswordToken;
+
+    @Column(name = "reset_password_token_expiry")
+    private Timestamp resetPasswordTokenExpiry;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<GameHistory> gameHistories;
 }
