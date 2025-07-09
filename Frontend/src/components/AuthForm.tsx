@@ -53,11 +53,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ onClose }) => {
     try {
       let success = false;
       let loginResult: boolean | string = false;
+      let registerResult: boolean | string = false;
+
       if (isLogin) {
         loginResult = await login(formData.username, formData.password);
         success = typeof loginResult === 'boolean' ? loginResult : false;
       } else {
-        success = await register(formData.username, formData.email, formData.password);
+        registerResult = await register(formData.username, formData.email, formData.password);
+        success = typeof registerResult === 'boolean' ? registerResult : false;
       }
 
       if (success) {
@@ -68,7 +71,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ onClose }) => {
           setShowConfirmation(true);
         }
       } else {
-        toast.error(typeof loginResult === 'string' ? loginResult : (error || 'Authentication failed'));
+        const errorMessage = isLogin ? loginResult : registerResult;
+        toast.error(typeof errorMessage === 'string' ? errorMessage : 'Authentication failed');
       }
     } catch (err) {
       toast.error('An error occurred');

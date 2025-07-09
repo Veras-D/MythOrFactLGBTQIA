@@ -24,7 +24,7 @@ export interface GameHistory {
 interface AuthContextType {
   user: User | null;
   login: (username: string, password: string) => Promise<boolean | string>;
-  register: (username: string, email: string, password: string) => Promise<boolean>;
+  register: (username: string, email: string, password: string) => Promise<boolean | string>;
   logout: () => void;
   confirmEmail: (token: string) => Promise<boolean>;
   updateHighScore: (score: number) => Promise<void>;
@@ -108,10 +108,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await api.post('/auth/register', { username, email, password });
       return true;
     } catch (err: unknown) {
-      const error = err as { response?: { data?: { message?: string, error?: string } } };
-      const errorMessage = error.response?.data?.message || error.response?.data?.error || 'Registration failed';
+      const error = err as { response?: { data?: string | { message?: string, error?: string } } };
+      let errorMessage = 'Registration failed';
+      if (error.response?.data) {
+        if (typeof error.response.data === 'string') {
+          errorMessage = error.response.data;
+        } else if (typeof error.response.data === 'object' && error.response.data.message) {
+          errorMessage = error.response.data.message;
+        } else if (typeof error.response.data === 'object' && error.response.data.error) {
+          errorMessage = error.response.data.error;
+        }
+      }
       setError(errorMessage);
-      return false;
+      return errorMessage;
     } finally {
       setIsLoading(false);
     }
