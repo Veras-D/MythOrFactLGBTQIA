@@ -112,8 +112,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const updateHighScore = async (score: number) => {
-    if (user && score > user.highestScore) {
-    }
   };
 
   const saveGameHistory = async (score: number) => {
