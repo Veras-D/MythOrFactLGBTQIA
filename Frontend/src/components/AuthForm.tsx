@@ -5,6 +5,7 @@ import { Input } from './ui/input';
 import { Card } from './ui/card';
 import { toast } from 'sonner';
 import { Mail, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface AuthFormProps {
   onClose?: () => void;
@@ -193,6 +194,13 @@ const AuthForm: React.FC<AuthFormProps> = ({ onClose }) => {
               required
               className="glass border-gray-300 text-gray-900 placeholder-gray-500 focus:border-blue-500"
             />
+            {isLogin && (
+              <div className="text-right pt-1">
+                <Link to="/forgot-password" className="text-sm text-gray-600 hover:text-gray-800 hover:underline" onClick={onClose}>
+                  Forgot Password?
+                </Link>
+              </div>
+            )}
           </div>
 
           {!isLogin && (
