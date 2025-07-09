@@ -9,6 +9,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import AdminRoute from "./components/AdminRoute";
 import StatementManagement from "./pages/StatementManagement";
 import NotFound from "./pages/NotFound";
+import EmailConfirmationPage from "./pages/EmailConfirmationPage";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
             <Route path="/admin" element={<AdminRoute />}>
               <Route path="statements" element={<StatementManagement />} />
             </Route>
+            <Route path="/confirm-email" element={<EmailConfirmationPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
