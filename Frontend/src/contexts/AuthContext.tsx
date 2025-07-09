@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import api from '../lib/api';
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 
 export interface User {
   id: number;
@@ -52,8 +52,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          const decodedToken: any = jwtDecode(token);
-          if (decodedToken.exp * 1000 > Date.now()) {
+          const decodedToken = jwtDecode<JwtPayload>(token);
+          if (decodedToken.exp && decodedToken.exp * 1000 > Date.now()) {
             api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             const response = await api.get('/users/me');
             setUser(response.data);
@@ -67,7 +67,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       setIsLoading(false);
     };
-
     checkUser();
   }, []);
 
@@ -82,8 +81,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const userResponse = await api.get(`/users/me`);
       setUser(userResponse.data);
       return true;
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Login failed');
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || 'Login failed');
       return false;
     } finally {
       setIsLoading(false);
@@ -96,8 +96,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       await api.post('/auth/register', { username, email, password });
       return await login(username, password);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed');
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || 'Registration failed');
       return false;
     } finally {
       setIsLoading(false);
