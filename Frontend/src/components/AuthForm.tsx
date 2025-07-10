@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card } from './ui/card';
 import { toast } from 'sonner';
-import { Mail, ArrowLeft } from 'lucide-react';
+import { Mail, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface AuthFormProps {
@@ -14,6 +14,8 @@ interface AuthFormProps {
 const AuthForm: React.FC<AuthFormProps> = ({ onClose }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -185,15 +187,24 @@ const AuthForm: React.FC<AuthFormProps> = ({ onClose }) => {
             <label className="block text-sm font-semibold text-gray-800 mb-2">
               Password
             </label>
-            <Input
-              name="password"
-              type="password"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={handleInputChange}
-              required
-              className="glass border-gray-300 text-gray-900 placeholder-gray-500 focus:border-blue-500"
-            />
+            <div className="relative">
+              <Input
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={handleInputChange}
+                required
+                className="glass border-gray-300 text-gray-900 placeholder-gray-500 focus:border-blue-500 pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
             {isLogin && (
               <div className="text-right pt-1">
                 <Link to="/forgot-password" className="text-sm text-gray-600 hover:text-gray-800 hover:underline" onClick={onClose}>
@@ -208,15 +219,24 @@ const AuthForm: React.FC<AuthFormProps> = ({ onClose }) => {
               <label className="block text-sm font-semibold text-gray-800 mb-2">
                 Confirm Password
               </label>
-              <Input
-                name="confirmPassword"
-                type="password"
-                placeholder="Confirm your password"
-                value={formData.confirmPassword}
-                onChange={handleInputChange}
-                required
-                className="glass border-gray-300 text-gray-900 placeholder-gray-500 focus:border-blue-500"
-              />
+              <div className="relative">
+                <Input
+                  name="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Confirm your password"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  required
+                  className="glass border-gray-300 text-gray-900 placeholder-gray-500 focus:border-blue-500 pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+                >
+                  {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
             </div>
           )}
 

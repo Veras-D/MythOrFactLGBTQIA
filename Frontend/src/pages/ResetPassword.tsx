@@ -5,7 +5,7 @@ import { Button } from '../components/ui/button';
 import { toast } from 'sonner';
 import api from '../lib/api';
 import { useSearchParams, Link } from 'react-router-dom';
-import { CheckCircle, XCircle, Loader2, ArrowLeft } from 'lucide-react';
+import { CheckCircle, XCircle, Loader2, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 
 const ResetPassword = () => {
   const [searchParams] = useSearchParams();
@@ -13,6 +13,8 @@ const ResetPassword = () => {
 
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isValidToken, setIsValidToken] = useState<boolean | null>(null);
@@ -120,28 +122,46 @@ const ResetPassword = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="newPassword" className="sr-only">New Password</label>
-            <Input
-              id="newPassword"
-              type="password"
-              placeholder="New Password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required
-              className="glass border-gray-300 text-gray-900 placeholder-gray-500 focus:border-blue-500"
-            />
+            <div className="relative">
+              <Input
+                id="newPassword"
+                type={showNewPassword ? "text" : "password"}
+                placeholder="New Password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                required
+                className="glass border-gray-300 text-gray-900 placeholder-gray-500 focus:border-blue-500 pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+              >
+                {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
           </div>
 
           <div>
             <label htmlFor="confirmPassword" className="sr-only">Confirm New Password</label>
-            <Input
-              id="confirmPassword"
-              type="password"
-              placeholder="Confirm New Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              className="glass border-gray-300 text-gray-900 placeholder-gray-500 focus:border-blue-500"
-            />
+            <div className="relative">
+              <Input
+                id="confirmPassword"
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="Confirm New Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                className="glass border-gray-300 text-gray-900 placeholder-gray-500 focus:border-blue-500 pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+              >
+                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
           </div>
 
           <Button
