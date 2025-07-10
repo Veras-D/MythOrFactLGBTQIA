@@ -50,7 +50,7 @@ An interactive full-stack quiz game designed to educate and challenge players' k
 ## 🗄️ Database Schema
 
 <div align="center">
-    <img width="85%" src="https://github.com/user-attachments/assets/d602a1db-d00b-4a6f-880c-2c089e10ba01"></img>
+    <img width="85%" src="https://github.com/user-attachments/assets/1a0354c4-4f58-4a7e-835f-f8ffdfea77c3"></img>
 </div>
 
 ### Development & Production
