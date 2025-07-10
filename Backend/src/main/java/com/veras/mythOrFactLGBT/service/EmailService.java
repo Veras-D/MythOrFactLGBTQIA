@@ -22,6 +22,9 @@ public class EmailService {
     @Value("${myth.or.fact.lgbt.backend.url}")
     private String backendBaseUrl;
 
+    @Value("${myth.or.fact.lgbt.frontend.url}")
+    private String frontendBaseUrl;
+
     public EmailService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
@@ -181,14 +184,14 @@ public class EmailService {
         <strong>⚠️ This link will expire in 1 hour</strong>
       </div>
       <p>Click the button below to reset your password:</p>
-      <a href="https://myth-or-fact-lgbtqia.vercel.app/reset-password?token=%s" class="button">🔑 Reset Password</a>
+      <a href="%s/reset-password?token=%s" class="button">🔑 Reset Password</a>
     </div>
     <p class="footer">
       If you didn't request this, you can safely ignore this email. 🛡️
     </p>
   </body>
 </html>
-""".formatted(resetToken);
+""".formatted(frontendBaseUrl, resetToken);
 
             helper.setText(htmlContent, true);
             mailSender.send(message);
