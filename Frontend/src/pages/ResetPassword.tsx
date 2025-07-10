@@ -67,7 +67,7 @@ const ResetPassword = () => {
       await api.post('/auth/reset-password', { token, newPassword });
       toast.success('Your password has been reset successfully!');
       setIsValidToken(true);
-    } catch (err: any) {
+    } catch (err: unknown) {
       const errorMessage = err.response?.data || 'Failed to reset password.';
       toast.error(errorMessage);
       setIsValidToken(false);
