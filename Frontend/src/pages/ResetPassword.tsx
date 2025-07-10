@@ -38,25 +38,35 @@ const ResetPassword = () => {
     }
 
     if (newPassword !== confirmPassword) {
-      setMessage('Passwords do not match.');
+      toast.error('Passwords do not match.');
       setIsSubmitting(false);
       return;
     }
 
     if (newPassword.length < 8) {
-      setMessage('Password must be at least 8 characters long.');
+      toast.error('Password must be at least 8 characters long.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!/[a-zA-Z]/.test(newPassword)) {
+      toast.error('Password must contain at least one letter.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!/[0-9]/.test(newPassword)) {
+      toast.error('Password must contain at least one number.');
       setIsSubmitting(false);
       return;
     }
 
     try {
       await api.post('/auth/reset-password', { token, newPassword });
-      setMessage('Your password has been reset successfully!');
-      toast.success('Password reset successful!');
+      toast.success('Your password has been reset successfully!');
       setIsValidToken(true);
-    } catch (err: unknown) {
+    } catch (err: any) {
       const errorMessage = err.response?.data || 'Failed to reset password.';
-      setMessage(errorMessage);
       toast.error(errorMessage);
       setIsValidToken(false);
     } finally {
@@ -81,7 +91,7 @@ const ResetPassword = () => {
         <Card className="w-full max-w-md glass-card border-0 p-8 text-center mx-4">
           <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Invalid or Missing Token</h2>
-          <p className="text-gray-700">{message || 'The password reset link is invalid or has expired.'}</p>
+          <p className="text-gray-700">{'The password reset link is invalid or has expired.'}</p>
           <div className="mt-6">
             <Link to="/forgot-password">
               <Button className="w-full pride-gradient text-white font-semibold py-3 btn-hover">
@@ -142,12 +152,6 @@ const ResetPassword = () => {
             {isSubmitting ? 'Resetting...' : 'Reset Password'}
           </Button>
         </form>
-
-        {message && (
-          <div className={`mt-4 text-sm ${message.includes('successfully') ? 'text-green-600' : 'text-red-600'}`}>
-            {message}
-          </div>
-        )}
 
         <div className="mt-6">
           <Link to="/" className="block">
