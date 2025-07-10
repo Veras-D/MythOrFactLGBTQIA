@@ -22,9 +22,6 @@ const ResetPassword = () => {
       setIsValidToken(false);
       setMessage('No reset token provided.');
     } else {
-      // Optionally, you could make an API call here to validate the token's existence
-      // without actually resetting the password, just to give immediate feedback.
-      // For now, we'll assume the token is valid until reset attempt.
       setIsValidToken(true);
     }
   }, [token]);
@@ -56,12 +53,12 @@ const ResetPassword = () => {
       await api.post('/auth/reset-password', { token, newPassword });
       setMessage('Your password has been reset successfully!');
       toast.success('Password reset successful!');
-      setIsValidToken(true); // Indicate success state
-    } catch (err: any) {
+      setIsValidToken(true);
+    } catch (err: unknown) {
       const errorMessage = err.response?.data || 'Failed to reset password.';
       setMessage(errorMessage);
       toast.error(errorMessage);
-      setIsValidToken(false); // Indicate error state
+      setIsValidToken(false);
     } finally {
       setIsSubmitting(false);
     }

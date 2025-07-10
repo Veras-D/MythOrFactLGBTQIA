@@ -21,7 +21,7 @@ const ForgotPassword = () => {
       await api.post('/auth/forgot-password', { email });
       setMessage('If an account with that email exists, a password reset link has been sent.');
       toast.success('Password reset request sent!');
-    } catch (err: any) {
+    } catch (err: unknown) {
       const errorMessage = err.response?.data || 'Failed to send password reset request.';
       setMessage(errorMessage);
       toast.error(errorMessage);
