@@ -2,11 +2,14 @@ FROM nginx:alpine AS nginx-config
 COPY nginx.conf /etc/nginx/nginx.conf
 
 FROM openjdk:17-jdk-slim AS app-build
+
 WORKDIR /app
+
 COPY pom.xml .
 RUN apt-get update && apt-get install -y maven
+
 COPY src ./src
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests -Pprod
 
 FROM ubuntu:latest
 RUN apt-get update && apt-get install -y nginx openjdk-17-jre-headless supervisor
