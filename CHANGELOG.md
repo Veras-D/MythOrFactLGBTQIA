@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## 2025-07-11
 ### 🚀 Added
+- docs(CHANGELOG): Add CHANGELOG.md file
 - build(nginx): Set user as root in supervisord.conf
 - build(nginx): Add supervisord.conf and set application as prod profile
 
