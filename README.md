@@ -215,33 +215,49 @@ npm run dev
    - Backend API: `http://localhost:8080`
    - API Documentation: `http://localhost:8080/swagger-ui.html`
 
-## 📁 Project Structure
+#### Run with docker
+For simple test you can use:
+```bash
+npm run nginx:dev
+```
+This comand will build a docker compose without any previous setup, please have sure to configure your `.env` appropriately. You can access the application in `http://localhost`.
+Look at `docker-compose.dev.yml` and `packaje.json` for more details.
 
+## 📁 Project Structure
 ```
 .
 ├── Backend/                    # Spring Boot API
 │   ├── src/main/java/com/veras/mythOrFactLGBT/
-│   │   ├── config/            # Security & OpenAPI configuration
+│   │   ├── config/            # Security, OpenAPI & Environment configuration
 │   │   ├── controller/        # REST API endpoints
 │   │   ├── dto/              # Data Transfer Objects
 │   │   ├── model/            # JPA Entity models
 │   │   ├── repository/       # Data access layer
-│   │   ├── security/         # JWT authentication
-│   │   └── service/          # Business logic
-│   ├── src/main/resources/   # Configuration files
-│   └── src/test/             # Unit & integration tests
-├── Frontend/                  # React application
+│   │   ├── security/         # JWT authentication & filters
+│   │   └── service/          # Business logic implementation
+│   ├── src/main/resources/   # Configuration files & database migrations
+│   │   ├── db/migration/     # Flyway database migrations
+│   │   │   ├── mysql/        # MySQL-specific migrations
+│   │   │   └── postgresql/   # PostgreSQL-specific migrations
+│   │   └── application*.properties
+│   ├── src/test/             # Unit & integration tests
+│   ├── Dockerfile            # Production container configuration
+│   ├── Dockerfile.dev        # Development container configuration
+│   └── pom.xml              # Maven dependencies
+├── Frontend/                  # React TypeScript application
 │   ├── src/
 │   │   ├── components/       # Reusable UI components
-│   │   ├── contexts/         # React contexts
-│   │   ├── data/            # Static quiz data
+│   │   ├── contexts/         # React contexts (Auth, etc.)
 │   │   ├── hooks/           # Custom React hooks
-│   │   ├── lib/             # Utility functions
-│   │   └── pages/           # Page components
-│   └── public/              # Static assets
-├── Data/                     # Database schema & seed data
-│   ├── schema.sql
-│   └── data.sql
+│   │   ├── lib/             # Utility functions & API client
+│   │   └── pages/           # Page components & routing
+│   ├── public/              # Static assets
+│   ├── Dockerfile.dev       # Development container configuration
+│   └── package.json         # NPM dependencies
+├── .github/workflows/        # CI/CD pipeline configuration
+├── nginx/                    # Reverse proxy configuration
+├── docker-compose.dev.yml    # Development environment setup
+├── turbo.json               # Monorepo build configuration
 └── README.md
 ```
 
