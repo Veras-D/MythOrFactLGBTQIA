@@ -18,6 +18,7 @@ const ResetPassword = () => {
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isValidToken, setIsValidToken] = useState<boolean | null>(null);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
     if (!token) {
@@ -66,7 +67,7 @@ const ResetPassword = () => {
     try {
       await api.post('/auth/reset-password', { token, newPassword });
       toast.success('Your password has been reset successfully!');
-      setIsValidToken(true);
+      setIsSuccess(true);
     } catch (err: unknown) {
       const errorMessage = err.response?.data || 'Failed to reset password.';
       toast.error(errorMessage);
@@ -82,6 +83,25 @@ const ResetPassword = () => {
         <Card className="w-full max-w-md glass-card border-0 p-8 text-center mx-4">
           <Loader2 className="w-16 h-16 text-blue-500 mx-auto mb-4 animate-spin" />
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Loading...</h2>
+        </Card>
+      </div>
+    );
+  }
+
+  if (isSuccess) {
+    return (
+      <div className="min-h-screen flex items-center justify-center light-bg p-4">
+        <Card className="w-full max-w-md glass-card border-0 p-8 text-center mx-4">
+          <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Password Reset Successful!</h2>
+          <p className="text-gray-700">You can now log in with your new password.</p>
+          <div className="mt-6">
+            <Link to="/">
+              <Button className="w-full pride-gradient text-white font-semibold py-3 btn-hover">
+                Back to Login
+              </Button>
+            </Link>
+          </div>
         </Card>
       </div>
     );

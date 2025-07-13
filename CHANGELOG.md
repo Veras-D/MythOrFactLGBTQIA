@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 - feat(migrations): Add inicial data migration
 - build(docker): Add docker-compose to dev development and test with load balancer suport
 - build(npm): Add docker compose script in root package.json
+- feat(resetPassword): Add sucess state to reset password page
 
 ### 🛠️ Changed
 - feat(environment): Change frontend base url variable load to import.meta
