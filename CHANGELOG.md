@@ -12,6 +12,9 @@ All notable changes to this project will be documented in this file.
 - feat(environment): Change frontend base url variable load to import.meta
 - feat(application.properties): Update properties
 
+### 🐛 Fixed
+- fix(docker): Fix docker compose BACKEND_BASE_URL value
+
 ### 🗑️ Removed
 - chore(data): Removing decrepit data.sql
 - revert(docker): Revert use of nginx in backend environment
