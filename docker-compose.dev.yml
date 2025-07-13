@@ -1,0 +1,100 @@
+services:
+  backend1:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8081:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - DB_DEV_STRING=jdbc:mysql://mysql:3306/lgbt-game?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      - MANAGEMENT_METRICS_ENABLE_ALL=false
+      - SPRING_AUTOCONFIGURE_EXCLUDE=org.springframework.boot.actuate.autoconfigure.metrics.MetricsAutoConfiguration
+      - BACKEND_BASE_URL=http://localhost/api
+      - FRONTEND_BASE_URL=http://localhost
+    privileged: true
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend2:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8082:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - DB_DEV_STRING=jdbc:mysql://mysql:3306/lgbt-game?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      - MANAGEMENT_METRICS_ENABLE_ALL=false
+      - SPRING_AUTOCONFIGURE_EXCLUDE=org.springframework.boot.actuate.autoconfigure.metrics.MetricsAutoConfiguration
+      - BACKEND_BASE_URL=http://localhost/api
+      - FRONTEND_BASE_URL=http://localhost
+    privileged: true
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./Frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost/api
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - backend1
+      - backend2
+      - frontend
+
+  mysql:
+    image: mysql:8
+    container_name: mysql_dev
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_DATABASE: lgbt-game
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p123"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+
+volumes:
+  mysql-data:
