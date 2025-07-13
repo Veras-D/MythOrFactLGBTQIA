@@ -1,22 +1,22 @@
-FROM nginx:alpine AS nginx-config
-COPY nginx.conf /etc/nginx/nginx.conf
-
-FROM openjdk:17-jdk-slim AS app-build
+FROM ubuntu:latest AS build
 
 WORKDIR /app
 
-COPY pom.xml .
-RUN apt-get update && apt-get install -y maven
+RUN apt-get update \
+  && apt-get install -y openjdk-17-jdk maven
 
-COPY src ./src
+COPY pom.xml .
+RUN mvn dependency:go-offline
+
+COPY src/main ./src/main
 RUN mvn clean package -DskipTests -Pprod
 
-FROM ubuntu:latest
-RUN apt-get update && apt-get install -y nginx openjdk-17-jre-headless supervisor
+FROM openjdk:17-jdk-slim
 
-COPY --from=nginx-config /etc/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY --from=app-build /app/target/*.jar /app/app.jar
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+WORKDIR /app
 
-EXPOSE 80
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+COPY --from=build /app/target/*.jar app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "app.jar"]
