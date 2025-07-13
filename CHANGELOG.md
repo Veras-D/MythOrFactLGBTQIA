@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 ### 🗑️ Removed
 - chore(data): Removing decrepit data.sql
 - revert(docker): Revert use of nginx in backend environment
+- chore(file): Removing unused files
 
 ### ⚠️ Security
 - feat(security): Add `http://localhost` in cors config
