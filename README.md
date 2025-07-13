@@ -188,7 +188,7 @@ cd Backend
 
 # Create MySQL database
 mysql -u root -p
-CREATE DATABASE mythOrFactLGBT_dev CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE lgbt-game CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 # Configure database connection
 # Edit src/main/resources/application-dev.properties
@@ -196,7 +196,7 @@ CREATE DATABASE mythOrFactLGBT_dev CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode
 
 # Install dependencies and run
 mvn clean install
-mvn spring-boot:run -Dspring-boot.run.profiles=dev
+mvn spring-boot:run
 ```
 
 3. **Frontend Setup:**
@@ -283,7 +283,7 @@ mvn test
 ### Frontend Tests
 ```bash
 cd Frontend
-npm run test
+npm run lint
 ```
 
 ## 🎨 Design System
@@ -311,20 +311,6 @@ The application features a comprehensive design system with:
   - `npm run preview` - Preview production build
   - `npm run lint` - Run ESLint
 
-### Adding New Questions
-
-Edit `Frontend/src/data/statements.ts` and add new statement objects:
-```typescript
-{
-  id: "unique-id",
-  statement: "The question text",
-  isTrue: boolean,
-  category: "topic-category",
-  difficulty: "easy" | "hard" | "expert",
-  explanation: "Educational explanation"
-}
-```
-
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -343,6 +329,11 @@ This project is open source and available under the [MIT License](LICENSE).
 This game was created to promote LGBTQ+ education and awareness through interactive learning. It aims to dispel myths and provide accurate information about LGBTQ+ topics in an engaging, game-like format.
 
 The project combines a robust Spring Boot backend with a modern React frontend to deliver a seamless, educational gaming experience that helps build understanding and acceptance of LGBTQ+ communities.
+
+## ⚙️ Deploy 
+> [!TIP]
+> - **Frontend**: https://myth-or-fact-lgbtqia.vercel.app/ 
+> - **Backend**: https://mythorfactlgbtqia.onrender.com/
 
 ## ☕ Support
 
