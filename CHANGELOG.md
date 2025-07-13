@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 
 ### 🛠️ Changed
 - feat(environment): Change frontend base url variable load to import.meta
+- feat(application.properties): Update properties
 
 ### 🗑️ Removed
 - chore(data): Removing decrepit data.sql
