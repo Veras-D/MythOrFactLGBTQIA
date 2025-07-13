@@ -22,7 +22,7 @@ An interactive full-stack quiz game designed to educate and challenge players' k
 
 - **Interactive Quiz Game**: Answer true/false questions about LGBTQ+ topics
 - **Multiple Difficulty Levels**: Easy, Hard, or Expert
-- **User Authentication**: JWT-based secure authentication system
+- **User Authentication**: JWT-based secure authentication system and email confirmation
 - **Leaderboard**: Compete with other players globally
 - **Responsive Design**: Play on desktop, tablet, or mobile
 - **Real-time Scoring**: Track your score and streaks
@@ -50,82 +50,119 @@ An interactive full-stack quiz game designed to educate and challenge players' k
 ## 🗄️ Database Schema
 
 <div align="center">
-    <img width="85%" src="https://github.com/user-attachments/assets/1a0354c4-4f58-4a7e-835f-f8ffdfea77c3"></img>
+    <img width="85%" src="https://github.com/user-attachments/assets/1a0354c4-4f58-4a7e-835f-f8ffdfea77c3" alt="Database Schema Diagram">
 </div>
 
-### Development & Production
-- **Development**: MySQL 8.x
-- **Production**: PostgreSQL (Supabase)
-- **Test**: H2 2.3.x
+### Environment Configuration
 
-### Tables Overview
+| Environment | Database | Version |
+|-------------|----------|---------|
+| Development | MySQL | 8.x |
+| Production | PostgreSQL | Supabase |
+| Testing | H2 | 2.3.x |
+
+### Schema Overview
 
 #### Users Table
-Stores user account information and authentication data.
+Manages user accounts and authentication data.
 
-| Column | Type | Description |
-|--------|------|-------------|
-| `id` | int8 | Primary key, auto-increment |
-| `username` | varchar | Unique username for login |
-| `email` | varchar | User email address |
-| `password` | varchar | Encrypted password hash |
-| `created_at` | timestamp | Account creation timestamp |
-| `highest_score` | int4 | User's best game score |
-| `role` | varchar | User role (USER, ADMIN) |
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `id` | int8 | PRIMARY KEY, AUTO INCREMENT | Unique user identifier |
+| `username` | varchar | UNIQUE, NOT NULL | Login username |
+| `email` | varchar | UNIQUE, NOT NULL | User email address |
+| `password` | varchar | NOT NULL | Encrypted password hash |
+| `created_at` | timestamp | DEFAULT NOW() | Account creation date |
+| `highest_score` | int4 | DEFAULT 0 | User's best game score |
+| `role` | varchar | DEFAULT 'USER' | User role (USER, ADMIN) |
+| `email_verified` | bool | DEFAULT false | Email verification status |
+| `confirmation_token` | varchar | NULLABLE | Email verification token |
+| `token_creation_date` | timestamp | NULLABLE | Token creation timestamp |
+| `reset_password_token` | varchar | NULLABLE | Password reset token |
+| `reset_password_token_expires` | timestamp | NULLABLE | Token expiration time |
 
 #### Statements Table
-Contains quiz questions with answers and metadata.
+Contains quiz questions with educational content.
 
-| Column | Type | Description |
-|--------|------|-------------|
-| `id` | int8 | Primary key, auto-increment |
-| `statement` | text | The quiz question/statement |
-| `is_fact` | bool | True if statement is fact, false if myth |
-| `explanation` | text | Educational explanation for the answer |
-| `difficulty` | int4 | Difficulty level (1=Easy, 2=Hard, 3=Expert) |
-| `category` | varchar | Topic category for organization |
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `id` | int8 | PRIMARY KEY, AUTO INCREMENT | Unique statement identifier |
+| `statement` | text | NOT NULL | Quiz question content |
+| `is_fact` | bool | NOT NULL | True for facts, false for myths |
+| `explanation` | text | NOT NULL | Educational explanation |
+| `difficulty` | int4 | CHECK (1-3) | Difficulty level (1=Easy, 2=Hard, 3=Expert) |
+| `category` | varchar | NOT NULL | Topic category |
 
 #### Game History Table
-Tracks individual game sessions and player performance.
+Records individual game sessions and performance metrics.
 
-| Column | Type | Description |
-|--------|------|-------------|
-| `id` | int8 | Primary key, auto-increment |
-| `user_id` | int8 | Foreign key referencing users.id |
-| `score` | int4 | Final score achieved in the game |
-| `played_at` | timestamp | When the game session occurred |
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `id` | int8 | PRIMARY KEY, AUTO INCREMENT | Unique game session identifier |
+| `user_id` | int8 | FOREIGN KEY, NOT NULL | References users.id |
+| `score` | int4 | NOT NULL | Final game score |
+| `played_at` | timestamp | DEFAULT NOW() | Game session timestamp |
 
 #### Flyway Schema History Table
-Migration tracking table managed by Flyway.
+Migration tracking managed by Flyway framework.
 
 | Column | Type | Description |
 |--------|------|-------------|
-| `installed_rank` | int4 | Migration execution order |
-| `version` | varchar | Migration version number |
+| `installed_rank` | int4 | Migration execution sequence |
+| `version` | varchar | Migration version identifier |
 | `description` | varchar | Migration description |
-| `type` | varchar | Migration type (SQL, JAVA, etc.) |
+| `type` | varchar | Migration type (SQL, JAVA) |
 | `script` | varchar | Migration script filename |
-| `checksum` | int4 | Script checksum for validation |
-| `installed_by` | varchar | User who executed migration |
-| `installed_on` | timestamp | Migration execution timestamp |
-| `execution_time` | int4 | Time taken to execute (ms) |
-| `success` | bool | Whether migration succeeded |
+| `checksum` | int4 | Script integrity checksum |
+| `installed_by` | varchar | Migration executor |
+| `installed_on` | timestamp | Migration execution time |
+| `execution_time` | int4 | Execution duration (milliseconds) |
+| `success` | bool | Migration success status |
 
 ### Relationships
 
-- `game_history.user_id` → `users.id` (Many-to-One)
-  - Each game session belongs to one user
-  - Users can have multiple game sessions
+```
+users (1) ----< game_history (N)
+  |
+  └── One user can have multiple game sessions
+```
 
 ### Database Setup
 
-#### Local Development (MySQL)
+#### Local Development
 ```sql
-CREATE DATABASE lgbt-game CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE lgbt-game 
+CHARACTER SET utf8mb4 
+COLLATE utf8mb4_unicode_ci;
 ```
 
-#### Production (PostgreSQL)
-The production database is hosted on Supabase with automatic backups and scaling.
+#### Production
+Production database runs on Supabase with:
+- Automatic backups
+- Real-time synchronization
+- Built-in authentication
+- Row-level security
+
+### Migration Management
+
+Database migrations are handled by Flyway with database-specific versioned scripts:
+
+#### MySQL Migrations (`/Backend/src/main/resources/db/migration/mysql/`)
+- `V1__Initial_schema.sql` - Base schema creation
+- `V2__Add_role_to_user_table.sql` - User role implementation
+- `V3__Make_role_not_null.sql` - Role field constraints
+- `V4__Add_email_verified_to_user_table.sql` - Email verification field
+- `V5__Add_confirmation_fields_to_user_table.sql` - Confirmation token system
+- `V6__Add_password_reset_fields_to_user_table.sql` - Password reset functionality
+- `V7__insert_initial_data.sql` - Initial data seeding
+
+#### PostgreSQL Migrations (`/Backend/src/main/resources/db/migration/postgresql/`)
+- `V1__Initial_schema.sql` - Base schema creation
+- `V2__Add_role_to_user_table.sql` - User role implementation
+- `V3__Make_role_not_null.sql` - Role field constraints
+- `V4__Add_email_verified_to_user_table.sql` - Email verification field
+- `V5__Add_confirmation_fields_to_user_table.sql` - Confirmation token system
+- `V6__Add_password_reset_fields_to_user_table.sql` - Password reset functionality
 
 ## 🚀 Getting Started
 
