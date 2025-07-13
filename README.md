@@ -256,21 +256,34 @@ npm run dev
 
 ### Authentication
 - `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
+- `POST /api/auth/login` - User login and JWT token generation
+- `GET /api/auth/confirm` - Email confirmation via token
+- `POST /api/auth/forgot-password` - Request password reset link
+- `POST /api/auth/reset-password` - Reset password using token
 
-### Users
+### Users & Leaderboard
 - `GET /api/users/me` - Get current user profile
+- `DELETE /api/users/me` - Delete authenticated user's account
 - `GET /api/users/{id}` - Get user by ID
+- `DELETE /api/users/{id}` - Delete user by ID (Admin only)
+- `GET /api/users/leaderboard` - Get global top 10 leaderboard
 
 ### Statements
-- `GET /api/statements` - Get all quiz statements
+- `GET /api/statements` - Get all quiz statements (with optional category/difficulty filters)
+- `GET /api/statements/{id}` - Get specific statement by ID
 - `POST /api/statements` - Create new statement
-- `PUT /api/statements/{id}` - Update statement
+- `PUT /api/statements/{id}` - Update existing statement
 - `DELETE /api/statements/{id}` - Delete statement
 
 ### Game History
-- `GET /api/gamehistory` - Get user's game history
-- `POST /api/gamehistory` - Record new game session
+- `POST /api/gamehistory` - Record new game session for authenticated user
+- `GET /api/gamehistory/user/me` - Get current user's game history
+- `GET /api/gamehistory/user/{userId}` - Get game history for specific user
+- `GET /api/gamehistory/leaderboard/user/{userId}` - Get score-ordered personal bests for user
+
+### API Documentation
+- **Swagger UI**: https://mythorfactlgbtqia.onrender.com/swagger-ui/index.html
+- **OpenAPI Spec**: https://mythorfactlgbtqia.onrender.com/
 
 ## 🧪 Testing
 
