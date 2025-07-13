@@ -268,38 +268,110 @@ Look at `docker-compose.dev.yml` and `packaje.json` for more details.
 3. **Track Your Score**: Monitor your current score and streak
 4. **Check Leaderboard**: Compare your performance with other players
 
+## 🔗 Pages
+
+### Home
+The main game interface where users can play the LGBT+ myth or fact quiz.
+
+**Route:** `/`
+
+| Interface | Screenshot |
+|-----------|------------|
+| **Game Page** | <img width="400" alt="Game Page" src="https://github.com/user-attachments/assets/e278261d-c30b-4690-9a00-3bed9cada371" /> |
+| **Profile Modal** | <img width="400" alt="Profile Modal" src="https://github.com/user-attachments/assets/63a659d1-9362-4075-a39b-696fb0f5ef4a" /> |
+| **Leaderboard Modal** | <img width="400" alt="Leaderboard Modal" src="https://github.com/user-attachments/assets/00a1caa5-0865-4d55-a1d6-73cfb7b398a0" /> |
+| **Login Modal** | <img width="400" alt="Login Modal" src="https://github.com/user-attachments/assets/6fa67ff5-8cbd-48f7-a06a-427f2d511151" /> |
+| **Sign Up Modal** | <img width="400" alt="Sign Up Modal" src="https://github.com/user-attachments/assets/af951985-5bb9-4d96-befc-67d40f276975" /> |
+
+### Email Confirmation
+Page for users to confirm their email address after registration.
+
+**Route:** `/confirm-email`
+
+| Interface | Screenshot |
+|-----------|------------|
+| **Website** | <img width="400" alt="Email Confirmation Page" src="https://github.com/user-attachments/assets/6ccb7ed9-7f96-4c3f-b7bc-e31808630ec9" /> |
+| **Email Template** | <img width="400" alt="Email Confirmation Template" src="https://github.com/user-attachments/assets/4099c6b2-0c1d-4567-aaa0-5c3a037e33e7" /> |
+| **Failure State** | <img width="400" alt="Email Confirmation Failure" src="https://github.com/user-attachments/assets/b38d5677-e770-43b8-9ca0-9a57cfacb668" /> |
+| **Success State** | <img width="400" alt="Email Confirmation Success" src="https://github.com/user-attachments/assets/14192033-608f-441d-af2e-2709bb6b7fb6" /> |
+
+### Forgot Password
+Password recovery page where users can request a password reset link.
+
+**Route:** `/forgot-password`
+
+| Interface | Screenshot |
+|-----------|------------|
+| **Website** | <img width="400" alt="Forgot Password Page" src="https://github.com/user-attachments/assets/7519e6e1-60c7-4a89-8e56-f8c0f0720d13" /> |
+| **Email Template** | <img width="400" alt="Password Reset Email" src="https://github.com/user-attachments/assets/421f5bd3-ffdd-48c8-ab40-4c023ad63141" /> |
+
+
+### Reset Password
+Page where users can set a new password using the reset token from email.
+
+**Route:** `/reset-password`
+
+| Interface | Screenshot |
+|-----------|------------|
+| **Website** | <img width="400" alt="Reset Password Page" src="https://github.com/user-attachments/assets/be391791-3c0e-4cc1-aa5a-789f334063b5" /> |
+| **Invalid Token State** | <img width="400" alt="Invalid Token State" src="https://github.com/user-attachments/assets/a49090d4-79b9-459f-bbbc-b00de539faff" /> |
+
+### Statement Management
+Administrative interface for managing quiz statements (ADMIN role only).
+
+**Route:** `/admin/statements`
+
+| Interface | Screenshot |
+|-----------|------------|
+| **Admin Panel** | <img width="400" alt="Statement Management Page" src="https://github.com/user-attachments/assets/c81d385f-9930-4b30-8001-733c6cad381f" /> |
+
+### Not Found
+404 error page displayed when users navigate to non-existent routes.
+
+**Route:** `*` (catch-all route)
+
+| Interface | Screenshot |
+|-----------|------------|
+| **404 Page** | <img width="400" alt="Not Found Page" src="https://github.com/user-attachments/assets/8fa73713-a653-446c-96cf-6c037773fb14" /> |
+
 ## 🔌 API Endpoints
 
 ### Authentication
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login and JWT token generation
-- `GET /api/auth/confirm` - Email confirmation via token
-- `POST /api/auth/forgot-password` - Request password reset link
-- `POST /api/auth/reset-password` - Reset password using token
+- `POST /api/auth/register` - User registration (public)
+- `POST /api/auth/login` - User login and JWT token generation (public)
+- `GET /api/auth/confirm` - Email confirmation via token (public)
+- `POST /api/auth/forgot-password` - Request password reset link (public)
+- `POST /api/auth/reset-password` - Reset password using token (public)
 
 ### Users & Leaderboard
-- `GET /api/users/me` - Get current user profile
-- `DELETE /api/users/me` - Delete authenticated user's account
-- `GET /api/users/{id}` - Get user by ID
-- `DELETE /api/users/{id}` - Delete user by ID (Admin only)
-- `GET /api/users/leaderboard` - Get global top 10 leaderboard
+- `GET /api/users/me` - Get current user profile (authenticated)
+- `DELETE /api/users/me` - Delete authenticated user's account (authenticated)
+- `GET /api/users/{id}` - Get user by ID (authenticated)
+- `DELETE /api/users/{id}` - Delete user by ID (ADMIN only)
+- `GET /api/users/leaderboard` - Get global top 10 leaderboard (public)
 
 ### Statements
-- `GET /api/statements` - Get all quiz statements (with optional category/difficulty filters)
-- `GET /api/statements/{id}` - Get specific statement by ID
-- `POST /api/statements` - Create new statement
-- `PUT /api/statements/{id}` - Update existing statement
-- `DELETE /api/statements/{id}` - Delete statement
+- `GET /api/statements` - Get all quiz statements with optional filters (public)
+  - Query params: `category`, `difficulty`
+- `GET /api/statements/{id}` - Get specific statement by ID (public)
+- `POST /api/statements` - Create new statement (ADMIN only)
+- `PUT /api/statements/{id}` - Update existing statement (ADMIN only)
+- `DELETE /api/statements/{id}` - Delete statement (ADMIN only)
 
 ### Game History
-- `POST /api/gamehistory` - Record new game session for authenticated user
-- `GET /api/gamehistory/user/me` - Get current user's game history
-- `GET /api/gamehistory/user/{userId}` - Get game history for specific user
-- `GET /api/gamehistory/leaderboard/user/{userId}` - Get score-ordered personal bests for user
+- `POST /api/gamehistory` - Record new game session (authenticated)
+- `GET /api/gamehistory/user/me` - Get current user's game history (authenticated)
+- `GET /api/gamehistory/user/{userId}` - Get game history for specific user (authenticated)
+- `GET /api/gamehistory/leaderboard/user/{userId}` - Get score-ordered personal bests (authenticated)
 
 ### API Documentation
 - **Swagger UI**: https://mythorfactlgbtqia.onrender.com/swagger-ui/index.html
 - **OpenAPI Spec**: https://mythorfactlgbtqia.onrender.com/
+
+#### Access Control
+- **Public**: Authentication endpoints, statement reading, global leaderboard
+- **Authenticated**: User profile, game history, user-specific data
+- **ADMIN only**: User management, statement CRUD operations
 
 ## 🧪 Testing
 
