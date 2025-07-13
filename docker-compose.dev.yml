@@ -10,7 +10,7 @@ services:
       - DB_DEV_STRING=jdbc:mysql://mysql:3306/lgbt-game?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
       - MANAGEMENT_METRICS_ENABLE_ALL=false
       - SPRING_AUTOCONFIGURE_EXCLUDE=org.springframework.boot.actuate.autoconfigure.metrics.MetricsAutoConfiguration
-      - BACKEND_BASE_URL=http://localhost/api
+      - BACKEND_BASE_URL=http://localhost
       - FRONTEND_BASE_URL=http://localhost
     privileged: true
     deploy:
@@ -39,7 +39,7 @@ services:
       - DB_DEV_STRING=jdbc:mysql://mysql:3306/lgbt-game?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
       - MANAGEMENT_METRICS_ENABLE_ALL=false
       - SPRING_AUTOCONFIGURE_EXCLUDE=org.springframework.boot.actuate.autoconfigure.metrics.MetricsAutoConfiguration
-      - BACKEND_BASE_URL=http://localhost/api
+      - BACKEND_BASE_URL=http://localhost
       - FRONTEND_BASE_URL=http://localhost
     privileged: true
     deploy:
