@@ -387,6 +387,26 @@ cd Frontend
 npm run lint
 ```
 
+## 🔐 Environment Variables
+
+### Backend (.env)
+- SPRING_PROFILES_ACTIVE: Default=dev
+- DB_DEV_USERNAME
+- DB_DEV_PASSWORD
+- DB_PROD_USERNAME
+- DB_PROD_PASSWORD
+- DB_STRING
+- DB_DEV_STRING
+- DB_DEV_DRIVER
+- JWT_SECRET: Default=testing
+- BACKEND_BASE_URL: Default=http://localhost:8080
+- FRONTEND_BASE_URL: Default=http://localhost:5173
+- EMAIL_SENDER
+- APP_PASSWORD
+
+### Frontend (.env)
+- VITE_API_URL: Default=http://localhost:8080/api
+
 ## 🎨 Design System
 
 The application features a comprehensive design system with:
