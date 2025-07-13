@@ -12,7 +12,9 @@
     "dev": "turbo run dev",
     "build": "turbo run build",
     "test": "turbo run test",
-    "lint": "turbo run lint" 
+    "lint": "turbo run lint",
+    "nginx:dev": "docker compose -f docker-compose.dev.yml up --build",
+    "nginx:stop": "docker compose -f docker-compose.dev.yml down -v"
   },
   "keywords": [],
   "author": "",
