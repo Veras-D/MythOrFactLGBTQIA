@@ -2,7 +2,41 @@
 
 All notable changes to this project will be documented in this file.
 
-## 2025-07-11
+## [1.2.1] - 2025-07-13
+### 🚀 Added
+- feat(migrations): Add inicial data migration
+- build(docker): Add docker-compose to dev development and test with load balancer suport
+- build(npm): Add docker compose script in root package.json
+
+### 🛠️ Changed
+- feat(environment): Change frontend base url variable load to import.meta
+
+### 🗑️ Removed
+- chore(data): Removing decrepit data.sql
+
+### ⚠️ Security
+- feat(security): Add `http://localhost` in cors config
+
+## [1.2.0] - 2025-07-12
+### 🚀 Added
+- build(dev): Add Dockerfile.dev to Backend
+- build(dev): Add Dockerfile.dev to Frontend
+- build(nginx): Add nginx config on root with load balanber feature
+
+### 🛠️ Changed
+- refactor(pom): Refactoring pom to remove dplicated dependencies
+- feat(properties): Setting flyway.repair-on-migrate as true on dev environment
+- feat(properties): Disable metrics on dev environment
+- feat(security): Add turn /actuator into public route
+
+### 🐛 Fixed
+- fix(dockerfile): Fix CMD comand
+- fix(migrations): Fix sintax of V3 migration to mysql
+
+### 🗑️ Removed
+- chore(data): Removing decrepit schema.sql
+
+## [1.1.3] - 2025-07-11
 ### 🚀 Added
 - docs(CHANGELOG): Add CHANGELOG.md file
 - build(nginx): Set user as root in supervisord.conf
@@ -11,7 +45,7 @@ All notable changes to this project will be documented in this file.
 ### 🛠️ Changed
 - build(nginx): Trying to use nginx on render by dockerfile
 
-## 2025-07-10
+## [1.1.2] - 2025-07-10
 ### 🚀 Added
 - docs(README): Update README.md
 - style(form): Add Password Visibility Toggle in AuthForm and ResetPassword
@@ -22,7 +56,7 @@ All notable changes to this project will be documented in this file.
 - fix(lint): Solving any type in ResetPassword page
 - fix(lint): Solving any type in reaset and forget pages
 
-## 2025-07-09
+## [1.1.1] - 2025-07-09
 ### 🚀 Added
 - test(AuthController): Fix old tests and add forger and reset password tests
 - feat(controller): Implementing forget and reset password in UserController
@@ -60,7 +94,7 @@ All notable changes to this project will be documented in this file.
 ### ⚠️ Security
 - feat(UserService): Add generatePasswordResetToken and resetPassword methods
 
-## 2025-07-08
+## [1.0.4] - 2025-07-08
 ### 🛠️ Changed
 - build(properties): COnfiguring flyway to slipt dev and prod migration
 - refactor(flyway): Slipt prod and dev migrations
@@ -68,7 +102,7 @@ All notable changes to this project will be documented in this file.
 ### 🗑️ Removed
 - perf(migrations): Removing unused migrations
 
-## 2025-07-05
+## [1.0.3] - 2025-07-05
 ### 🚀 Added
 - feat(admin): add admin workflow
 - feat(statementManager): Add statement manager page
@@ -78,7 +112,7 @@ All notable changes to this project will be documented in this file.
 - fix(tests): Fix caches dependeces in frontend ci test
 - fix(turborepo): Replace papeline to tasks key
 
-## 2025-07-04
+## [1.0.2] - 2025-07-04
 ### 🚀 Added
 - feat(usercontroller): Add delete route /api/users/me
 - feat(profile): Add profele page
@@ -102,7 +136,7 @@ All notable changes to this project will be documented in this file.
 - fix(leaderBoard): Fix getLeaderBoard function
 - fix(layout): Change high_score to highScore
 
-## 2025-07-03
+## [1.0.1] - 2025-07-03
 ### 🚀 Added
 - build(turborepo): Adding package manager to turborepo
 - docs(README): Update readme
@@ -123,7 +157,7 @@ All notable changes to this project will be documented in this file.
 - test(controllers): Removing security filter on tests
 - test(AuthController): Reoving security filter on test
 
-## 2025-07-02
+## [1.0.0] - 2025-07-02
 ### 🚀 Added
 - build(pom): Update dependences
 - feat(api): Connect frontend with backend api
@@ -138,7 +172,7 @@ All notable changes to this project will be documented in this file.
 ### ⚠️ Security
 - feat(security): Add cors config
 
-## 2025-07-01
+## [0.9.0] - 2025-07-01
 ### 🚀 Added
 - feat(user): Set USER role as default on register
 - feat(migrations): Add not null to role property in table user
@@ -153,7 +187,7 @@ All notable changes to this project will be documented in this file.
 - feat(models): Update user model to add role property
 - feat(migrations): Add role to user table
 
-## 2025-06-30
+## [0.8.0] - 2025-06-30
 ### 🚀 Added
 - feat(application.properties): Set spring.jpa.open-in-view as false
 - build(pom): Add suport for profiles in pom.xml
@@ -166,7 +200,7 @@ All notable changes to this project will be documented in this file.
 ### ⚠️ Security
 - build(envionment): Add jwt expriration to application-prod.properties
 
-## 2025-06-29
+## [0.7.0] - 2025-06-29
 ### 🚀 Added
 - perf(eslint): Solving eslint warnings
 - style(NotFound): Update not found page style
@@ -181,7 +215,7 @@ All notable changes to this project will be documented in this file.
 ### ⚠️ Security
 - feat(security): Secure POST /api/gamehistory endpoint
 
-## 2025-06-28
+## [0.6.0] - 2025-06-28
 ### 🚀 Added
 - docs(README): Update readme
 - docs(LICENSE): Add MIT license file
@@ -191,17 +225,17 @@ All notable changes to this project will be documented in this file.
 - fix(dotenv): Add dotenv load in main() on test envioroment
 - fix(dotenv): Add dotenv load in main()
 
-## 2025-06-27
+## [0.5.0] - 2025-06-27
 ### 🚀 Added
 - feat: Initial commit of the Backend application
 - ci(.gitignore): Update .gitignore file
 
-## 2025-06-11
+## [0.4.0] - 2025-06-11
 ### 🚀 Added
 - docs(README): Update readme
 - ci(.gitignore): Add gitignore file
 
-## 2025-05-29
+## [0.3.0] - 2025-05-29
 ### 🚀 Added
 - style(button): Update Sign In Button
 - feat(components): Add main components
@@ -209,7 +243,7 @@ All notable changes to this project will be documented in this file.
 ### 🐛 Fixed
 - fix(postcss): Solving postcss comflite
 
-## 2025-05-28
+## [0.2.0] - 2025-05-28
 ### 🚀 Added
 - ci(husky): Add husky setup
 - feat(vite): Setup frontend
