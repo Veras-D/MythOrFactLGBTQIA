@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.2] - 2025-07-18
+### 🛠️ Changed
+- fix(swagger-ui): Fix swagger-ui link
+- docs(README): Update README
+
 ## [1.2.1] - 2025-07-13
 ### 🚀 Added
 - feat(migrations): Add inicial data migration
