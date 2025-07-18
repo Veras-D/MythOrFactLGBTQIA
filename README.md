@@ -315,6 +315,7 @@ Page where users can set a new password using the reset token from email.
 |-----------|------------|
 | **Website** | <img width="400" alt="Reset Password Page" src="https://github.com/user-attachments/assets/be391791-3c0e-4cc1-aa5a-789f334063b5" /> |
 | **Invalid Token State** | <img width="400" alt="Invalid Token State" src="https://github.com/user-attachments/assets/a49090d4-79b9-459f-bbbc-b00de539faff" /> |
+| **Sucess State** | <img width="400" alt="Sucess State" src="https://github.com/user-attachments/assets/b89d9709-2e6d-4c80-ab8e-9a415a9a6e76" /> |
 
 ### Statement Management
 Administrative interface for managing quiz statements (ADMIN role only).
