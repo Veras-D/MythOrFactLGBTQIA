@@ -455,7 +455,7 @@ The project combines a robust Spring Boot backend with a modern React frontend t
 ## ⚙️ Deploy 
 > [!TIP]
 > - **Frontend**: https://myth-or-fact-lgbtqia.vercel.app/ 
-> - **Backend**: https://mythorfactlgbtqia.onrender.com/
+> - **Backend**: https://mythorfactlgbtqia.onrender.com/v3/api-docs
 
 ## ☕ Support
 
