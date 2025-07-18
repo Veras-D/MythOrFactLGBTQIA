@@ -213,7 +213,7 @@ npm run dev
 4. **Access the application:**
    - Frontend: `http://localhost:5173`
    - Backend API: `http://localhost:8080`
-   - API Documentation: `http://localhost:8080/swagger-ui.html`
+   - API Documentation: `http://localhost:8080/swagger-ui/index.html`
 
 #### Run with docker
 For simple test you can use:
@@ -424,7 +424,7 @@ The application features a comprehensive design system with:
 - **Profiles**:
   - `dev`: Local development with MySQL
   - `prod`: Production with PostgreSQL
-- **Documentation**: Swagger UI available at `/swagger-ui.html`
+- **Documentation**: Swagger UI available at `/swagger-ui/index.html`
 
 ### Frontend Development
 - **Available Scripts**:
