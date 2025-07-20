@@ -42,3 +42,8 @@ node_modules/
 /Backend/!**/src/main/**/build/
 /Backend/!**/src/test/**/build/
 /.metadata/
+Backend/terraform/.terraform/
+Backend/terraform/terraform.tfstate
+Backend/terraform/terraform.tfstate.backup
+Backend/terraform/terraform.tfvars
+Backend/terraform/.terraform.lock.hcl
