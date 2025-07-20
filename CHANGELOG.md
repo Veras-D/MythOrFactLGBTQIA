@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.3] - 2025-07-20
+### 🚀 Added
+- build(docker): Add dockerfile for frontend deploy
+
+### 🛠️ Changed
+- ci(git): Update .gitignore
+
 ## [1.2.2] - 2025-07-18
 ### 🛠️ Changed
 - fix(swagger-ui): Fix swagger-ui link
