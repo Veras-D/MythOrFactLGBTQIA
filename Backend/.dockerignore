@@ -1,0 +1,9 @@
+target/
+build/
+*.log
+*.tmp
+*.swp
+Dockerfile
+Dockerfile.dev
+.dockerignore
+.env
