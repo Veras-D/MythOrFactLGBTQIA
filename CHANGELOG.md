@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### 🚀 Added
 - build(docker): Add dockerfile for frontend deploy
 - build(docker): Add .dockerignore files
+- ci(terraform): Add terraform to EC2 deploy
 
 ### 🛠️ Changed
 - ci(git): Update .gitignore
