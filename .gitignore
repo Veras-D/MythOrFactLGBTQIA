@@ -47,3 +47,4 @@ Backend/terraform/terraform.tfstate
 Backend/terraform/terraform.tfstate.backup
 Backend/terraform/terraform.tfvars
 Backend/terraform/.terraform.lock.hcl
+*/*.pen
